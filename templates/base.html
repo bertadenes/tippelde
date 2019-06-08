@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sweepstake</title>
+</head>
+<body>
+<table>
+    <tr>
+        {% if user.is_authenticated %}
+            <th>Welcome {{ user.username }}!</th>
+            <th><a href="{% url 'games' %}">Games</a></th>
+            <th><a href="{% url 'guesses' %}">Guesses</a></th>
+            <th><a href="{% url 'logout' %}">logout</a></th>
+        {% else %}
+            <th>Please login to see details.</th>
+            <th><a href="{% url 'login' %}">login</a></th>
+        {% endif %}
+    </tr>
+</table>
+{% block content %}{% endblock content %}
+</body>
+</html>

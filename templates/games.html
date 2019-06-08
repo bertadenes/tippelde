@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Games</title>
+</head>
+<body>
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h3>List of Games</h3>
+{% if games %}
+   <ul>
+       {% for g in games %}
+           <li>{{ g }}</li>
+       {% endfor %}
+   </ul>
+{% else %}
+    <p>No games are available.</p>
+{% endif %}
+
+{% endblock %}
+</body>
+</html>

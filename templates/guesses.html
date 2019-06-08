@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Guesses</title>
+</head>
+<body>
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h3>List of Guesses</h3>
+{% if guesses %}
+   <ul>
+       {% for g in guesses %}
+           <li>{{ g }}</li>
+       {% endfor %}
+   </ul>
+{% else %}
+    <p>No guesses are available.</p>
+{% endif %}
+
+{% endblock %}
+</body>
+</html>
