@@ -9,11 +9,21 @@
 
 {% block content %}
 
-<h3>List of Games</h3>
-{% if games %}
+<h3>Upcoming</h3>
+{% if upcoming %}
    <ul>
-       {% for g in games %}
-           <li>{{ g }}</li>
+       {% for g in upcoming %}
+           <li>{{ g }} {{ g.kickoff }}</li>
+       {% endfor %}
+   </ul>
+{% else %}
+    <p>No games are available.</p>
+{% endif %}
+<h3>Results</h3>
+{% if results %}
+   <ul>
+       {% for g in results %}
+           <li>{{ g }} {{ g.kickoff }}</li>
        {% endfor %}
    </ul>
 {% else %}
