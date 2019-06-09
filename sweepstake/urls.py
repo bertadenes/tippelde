@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^games/', views.games, name='games'),
     url(r'^guesses/', views.guesses, name='guesses'),
+    url(r'^details/(?P<game_id>[0-9]+)/$', views.details, name='details'),
 ]
 """
 accounts routing:

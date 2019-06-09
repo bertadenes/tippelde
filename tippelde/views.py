@@ -24,5 +24,7 @@ def guesses(request):
     return render(request, 'guesses.html', context)
 
 
-def detail(request, game_id):
-    return HttpResponse("You're looking at question {:s}.".format(game_id))
+def details(request, game_id):
+    game = Game.objects.get(id=game_id)
+    context = {'game': game}
+    return render(request, 'details.html', context)
