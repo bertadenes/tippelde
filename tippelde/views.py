@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.utils import timezone
-from tippelde.models import Game, Bet
 from django.http import HttpResponse
+from tippelde.models import Game, Bet
+from tippelde.forms import Bet_form
 
 # Create your views here.
 
@@ -25,6 +26,13 @@ def guesses(request):
 
 
 def details(request, game_id):
+    now = timezone.now()
     game = Game.objects.get(id=game_id)
     context = {'game': game}
+    if game.kickoff > now:
+        if request.method == 'POST':
+            form = Bet_form(request.POST)
+        else:
+            form = Bet_form()
+        context['form'] = form
     return render(request, 'details.html', context)

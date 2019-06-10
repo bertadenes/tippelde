@@ -8,9 +8,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-{{ game }}
-
+    <p>{{ game }}</p>
+    <p>{{ game.kickoff }}</p>
+    {% if game.result %}
+        {% if game.result == 0 %}
+            <p>Draw</p>
+        {% elif game.result == 1 %}
+            <p>Home</p>
+        {% elif game.result == 2 %}
+            <p>Away</p>
+        {% endif %}
+    {% endif %}
+    {% if form %}
+        <p>Guess the outcome:</p>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="Submit">
+        </form>
+    {% endif %}
 {% endblock %}
 </body>
 </html>
