@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 
+
 # Create your models here.
 class Game(models.Model):
     home_team = models.CharField(max_length=200)
@@ -10,6 +11,13 @@ class Game(models.Model):
 
     def __str__(self):
         return "{0:s}-{1:s}".format(self.home_team, self.away_team)
+
+    def get_result(self):
+        outcomes = ["Draw", "Home", "Away"]
+        try:
+            return "{0:s}".format(outcomes[self.result])
+        except TypeError:
+            return "Not registered"
 
 
 class Bookmaker(models.Manager):
@@ -30,4 +38,9 @@ class Bet(models.Model):
     objects = Bookmaker()
 
     def __str__(self):
-        return "{0:s} {1:d}".format(self.game.__str__(), self.value)
+        outcomes = ["Draw", "Home", "Away"]
+        return "{0:s} {1:s}".format(self.game.__str__(), outcomes[self.value])
+
+    def get_outcome(self):
+        outcomes = ["Draw", "Home", "Away"]
+        return "{0:s}".format(outcomes[self.value])

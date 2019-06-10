@@ -5,12 +5,15 @@
     <title>Sweepstake</title>
 </head>
 <body>
+{% load custom_tags %}
 <table>
     <tr>
         {% if user.is_authenticated %}
             <th>Welcome {{ user.username }}!</th>
             <th><a href="{% url 'games' %}">Games</a></th>
-            <th><a href="{% url 'guesses' %}">Guesses</a></th>
+            {% if request.user|has_group:"Players" %}
+                <th><a href="{% url 'guesses' %}">Guesses</a></th>
+            {% endif %}
             <th><a href="{% url 'logout' %}">logout</a></th>
         {% else %}
             <th>Please login to see details.</th>

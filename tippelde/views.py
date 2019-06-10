@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.utils import timezone
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required, user_passes_test
 from tippelde.models import Game, Bet
 from tippelde.forms import Bet_form
+from tippelde.extras import player_group
 
 # Create your views here.
 
@@ -19,12 +21,17 @@ def games(request):
     return render(request, 'games.html', context)
 
 
+@login_required
+@user_passes_test(player_group)
 def guesses(request):
-    guesses = Bet.objects.filter(user=request.user)
-    context = {'guesses': guesses}
+    now = timezone.now()
+    upcoming = Bet.objects.filter(user=request.user).filter(game__kickoff__gte=now).order_by('game__kickoff')
+    results = Bet.objects.filter(user=request.user).exclude(game__kickoff__gte=now).order_by('-game__kickoff')
+    context = {'results': results, 'upcoming': upcoming}
     return render(request, 'guesses.html', context)
 
 
+@login_required
 def details(request, game_id):
     now = timezone.now()
     game = Game.objects.get(id=game_id)

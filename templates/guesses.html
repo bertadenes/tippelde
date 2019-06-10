@@ -9,16 +9,46 @@
 
 {% block content %}
 
-<h3>List of Guesses</h3>
-{% if guesses %}
-   <ul>
-       {% for g in guesses %}
-           <li>{{ g }}</li>
-       {% endfor %}
-   </ul>
-{% else %}
-    <p>No guesses are available.</p>
-{% endif %}
+    <h3>Upcoming games</h3>
+        <table>
+            <tr>
+                <th>Game</th>
+                <th>Kickoff</th>
+                <th>Guess</th>
+            </tr>
+            {% for g in upcoming %}
+                <tr>
+                    <td><a href="{% url 'details' g.game.id %}">{{ g.game }}</a></td>
+                    <td>{{ g.game.kickoff }}</td>
+                    <td>{{ g.get_outcome }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% if upcoming %}
+    {% else %}
+        <p>No games are available.</p>
+    {% endif %}
+    <h3>Results</h3>
+    {% if results %}
+        <table>
+            <tr>
+                <th>Game</th>
+                <th>Kickoff</th>
+                <th>Guess</th>
+                <th>Result</th>
+            </tr>
+            {% for g in results %}
+                <tr>
+                    <td><a href="{% url 'details' g.game.id %}">{{ g.game }}</a></td>
+                    <td>{{ g.game.kickoff }}</td>
+                    <td>{{ g.get_outcome }}</td>
+                    <td>{{ g.game.get_result }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No games are available.</p>
+    {% endif %}
 
 {% endblock %}
 </body>
