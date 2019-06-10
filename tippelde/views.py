@@ -42,6 +42,7 @@ def details(request, game_id):
                 form = Bet_form(request.POST)
                 if form.is_valid():
                     Bet.objects.filter(user=request.user, game=game).update(value=form.cleaned_data['value'])
+                    return HttpResponseRedirect('/guesses/')
             else:
                 bet = Bet.objects.filter(user=request.user, game=game).get()
                 form = Bet_form(instance=bet)
