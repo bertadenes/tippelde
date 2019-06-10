@@ -1,14 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Management</title>
-</head>
 <body>
 {% extends 'base.html' %}
 
 {% block content %}
-    <h4>Add a new game</h4>
+    <h3>Upcoming</h3>
+    {% if upcoming %}
+    <table>
+        <tr>
+            <th>Game</th>
+            <th>Kickoff</th>
+            <th>Delete</th>
+        </tr>
+        {% for g in upcoming %}
+            <tr>
+                <td><a href="{% url 'details' g.id %}">{{ g }}</a></td>
+                <td>{{ g.kickoff }}</td>
+                <td><a href="{% url 'delete_game' g.id %}">delete</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>No games are available.</p>
+    {% endif %}
+    <h3>Results</h3>
+    {% if results %}
+        <table>
+            <tr>
+                <th>Game</th>
+                <th>Kickoff</th>
+                <th>Delete</th>
+            </tr>
+            {% for g in results %}
+                <tr>
+                    <td><a href="{% url 'details' g.id %}">{{ g }}</a></td>
+                    <td>{{ g.kickoff }}</td>
+                    <td><a href="{% url 'delete_game' g.id %}">delete</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No games are available.</p>
+    {% endif %}
+    <h3>Add a new game</h3>
     <form action="" method="post">
         {% csrf_token %}
         {{ form }}
@@ -16,4 +50,8 @@
     </form>
 {% endblock %}
 </body>
+<head>
+    <meta charset="UTF-8">
+    <title>Management</title>
+</head>
 </html>

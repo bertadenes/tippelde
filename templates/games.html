@@ -1,33 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Games</title>
 </head>
+<html lang="en">
 <body>
 {% extends 'base.html' %}
 
 {% block content %}
     <h3>Upcoming</h3>
-        <table>
+    {% if upcoming %}
+    <table>
+        <tr>
+            <th>Game</th>
+            <th>Kickoff</th>
+        </tr>
+        {% for g in upcoming %}
             <tr>
-                <th>Game</th>
-                <th>Kickoff</th>
+                <td><a href="{% url 'details' g.id %}">{{ g }}</a></td>
+                <td>{{ g.kickoff }}</td>
             </tr>
-            {% for g in upcoming %}
-                <tr>
-                    <td><a href="{% url 'details' g.id %}">{{ g }}</a></td>
-                    <td>{{ g.kickoff }}</td>
-                </tr>
-            {% endfor %}
-        </table>
-        {% if upcoming %}
+        {% endfor %}
+    </table>
     {% else %}
         <p>No games are available.</p>
     {% endif %}
     <h3>Results</h3>
     {% if results %}
-       <table>
+        <table>
             <tr>
                 <th>Game</th>
                 <th>Kickoff</th>

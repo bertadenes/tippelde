@@ -26,6 +26,8 @@ urlpatterns = [
     url(r'^management/', views.manage, name='management'),
     url(r'^guesses/', views.guesses, name='guesses'),
     url(r'^details/(?P<game_id>[0-9]+)/$', views.details, name='details'),
+    url(r'^game_delete/(?P<pk>\d+)/$', views.Game_delete.as_view(template_name='game_delete.html',),
+        name='delete_game'),
 ]
 """
 accounts routing:

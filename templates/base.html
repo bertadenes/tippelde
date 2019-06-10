@@ -10,8 +10,8 @@
     <tr>
         {% if user.is_authenticated %}
             <th>Welcome {{ user.username }}!</th>
-            <th><a href="{% url 'games' %}">Games</a></th>
             {% if request.user|has_group:"Players" %}
+                <th><a href="{% url 'games' %}">Games</a></th>
                 <th><a href="{% url 'guesses' %}">Guesses</a></th>
             {% endif %}
             {% if request.user.username == "siteadmin" %}

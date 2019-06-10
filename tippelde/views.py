@@ -1,12 +1,18 @@
+from django.views.generic.edit import DeleteView
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
-from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required, user_passes_test
 from tippelde.models import Game, Bet
 from tippelde.forms import Bet_form, Game_form
 from tippelde.extras import player_group, is_manager
 
+
 # Create your views here.
+class Game_delete(DeleteView):
+    model = Game
+    success_url = reverse_lazy('management')
 
 
 def index(request):
@@ -62,7 +68,10 @@ def details(request, game_id):
 @login_required
 @user_passes_test(is_manager)
 def manage(request):
-    context = {}
+    now = timezone.now()
+    upcoming = Game.objects.order_by('kickoff').filter(kickoff__gte=now)
+    results = Game.objects.order_by('-kickoff').exclude(kickoff__gte=now)
+    context = {'results': results, 'upcoming': upcoming}
     if request.method == 'POST':
         form = Game_form(request.POST)
         if form.is_valid():
