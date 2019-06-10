@@ -26,3 +26,9 @@ class Game_form(forms.ModelForm):
                 .filter(kickoff__lte=self.cleaned_data['kickoff'] + datetime.timedelta(days=1)).exists():
             raise ValidationError("There is a similar entry.")
         return ko
+
+
+class Game_update_form(forms.ModelForm):
+    class Meta:
+        model = Game
+        fields = ('result', )

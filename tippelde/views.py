@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required, user_passes_test
 from tippelde.models import Game, Bet
-from tippelde.forms import Bet_form, Game_form
+from tippelde.forms import Bet_form, Game_form, Game_update_form
 from tippelde.extras import player_group, is_manager
 
 
@@ -47,7 +47,7 @@ def details(request, game_id):
     now = timezone.now()
     game = Game.objects.get(id=game_id)
     context = {'game': game}
-    if game.kickoff > now:
+    if player_group(request.user) and game.kickoff > now:
         if Bet.objects.filter(user=request.user, game=game).exists():
             if request.method == 'POST':
                 form = Bet_form(request.POST)
@@ -66,6 +66,26 @@ def details(request, game_id):
                     return HttpResponseRedirect('/guesses/')
             else:
                 form = Bet_form()
+        context['form'] = form
+    if is_manager(request.user):
+        if game.kickoff >= now:
+            if request.method == 'POST':
+                form = Game_form(request.POST)
+                if form.is_valid():
+                    Game.objects.filter(id=game_id).update(home_team=form.cleaned_data['home_team'],
+                                                           away_team=form.cleaned_data['away_team'],
+                                                           kickoff=form.cleaned_data['kickoff'])
+                    return HttpResponseRedirect('/management/')
+            else:
+                form = Game_form(instance=game)
+        else:
+            if request.method == 'POST':
+                form = Game_update_form(request.POST)
+                if form.is_valid():
+                    Game.objects.filter(id=game_id).update(result=form.cleaned_data['result'])
+                    return HttpResponseRedirect('/management/')
+            else:
+                form = Game_update_form(instance=game)
         context['form'] = form
     return render(request, 'details.html', context)
 

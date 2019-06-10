@@ -11,10 +11,16 @@
     <p>{{ game }}</p>
     <p>{{ game.kickoff }}</p>
     {% if game.result %}
-        {{ game.get_result }}
+        Outcome: {{ game.get_result }}
     {% endif %}
     {% if form and request.user|has_group:"Players"%}
         <p>Guess the outcome:</p>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="Submit">
+        </form>
+    {% elif form and request.user.username == "siteadmin"%}
         <form action="" method="post">
             {% csrf_token %}
             {{ form }}
