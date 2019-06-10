@@ -13,15 +13,20 @@ class Game(models.Model):
 
 
 class Bookmaker(models.Manager):
-    def create_Bet(self, user_id, game_id, value):
-        bet = self.create()
+    def create_Bet(self, user, game, value):
+        bet = self.create(user=user, game=game, value=value)
         return bet
 
 
 class Bet(models.Model):
+    outcomes = [
+        (0, ("Draw")),
+        (1, ("Home")),
+        (2, ("Away")),
+    ]
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    value = models.SmallIntegerField(default=0)
+    value = models.SmallIntegerField(default=0, choices=outcomes, verbose_name='outcome')
     objects = Bookmaker()
 
     def __str__(self):

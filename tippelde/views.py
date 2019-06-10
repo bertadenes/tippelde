@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.utils import timezone
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from tippelde.models import Game, Bet
 from tippelde.forms import Bet_form
 
@@ -30,9 +30,22 @@ def details(request, game_id):
     game = Game.objects.get(id=game_id)
     context = {'game': game}
     if game.kickoff > now:
-        if request.method == 'POST':
-            form = Bet_form(request.POST)
+        if Bet.objects.filter(user=request.user, game=game).exists():
+            if request.method == 'POST':
+                form = Bet_form(request.POST)
+                if form.is_valid():
+                    Bet.objects.filter(user=request.user, game=game).update(value=form.cleaned_data['value'])
+            else:
+                bet = Bet.objects.filter(user=request.user, game=game).get()
+                form = Bet_form(instance=bet)
         else:
-            form = Bet_form()
+            if request.method == 'POST':
+                form = Bet_form(request.POST)
+                if form.is_valid():
+                    bet = Bet.objects.create_Bet(game=game, user=request.user, value=form.cleaned_data['value'])
+                    bet.save()
+                    return HttpResponseRedirect('/guesses/')
+            else:
+                form = Bet_form()
         context['form'] = form
     return render(request, 'details.html', context)
