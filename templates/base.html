@@ -14,6 +14,9 @@
             {% if request.user|has_group:"Players" %}
                 <th><a href="{% url 'guesses' %}">Guesses</a></th>
             {% endif %}
+            {% if request.user.username == "siteadmin" %}
+                <th><a href="{% url 'management' %}">Management</a></th>
+            {% endif %}
             <th><a href="{% url 'logout' %}">logout</a></th>
         {% else %}
             <th>Please login to see details.</th>

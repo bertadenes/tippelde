@@ -6,7 +6,7 @@
 </head>
 <body>
 {% extends 'base.html' %}
-
+{% load custom_tags %}
 {% block content %}
     <p>{{ game }}</p>
     <p>{{ game.kickoff }}</p>
@@ -19,7 +19,7 @@
             <p>Away</p>
         {% endif %}
     {% endif %}
-    {% if form %}
+    {% if form and request.user|has_group:"Players"%}
         <p>Guess the outcome:</p>
         <form action="" method="post">
             {% csrf_token %}

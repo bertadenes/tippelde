@@ -1,13 +1,14 @@
 from django import forms
-from tippelde.models import Bet
+from tippelde.models import Bet, Game
 
 
 class Bet_form(forms.ModelForm):
     class Meta:
         model = Bet
         fields = ('value', )
-    outcomes = [
-    (0, ("Draw")),
-    (1, ("Home")),
-    (2, ("Away")),
-    ]
+
+
+class Game_form(forms.ModelForm):
+    class Meta:
+        model = Game
+        fields = ('home_team', 'away_team', 'kickoff', )

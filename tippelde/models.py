@@ -3,11 +3,19 @@ from django.conf import settings
 
 
 # Create your models here.
+class Game_Manager(models.Manager):
+    def create_Game(self, home, away, kickoff):
+        game = Game(home_team=home, away_team=away, kickoff=kickoff)
+        return game
+
+
 class Game(models.Model):
+    outcomes = [(0, "Draw"), (1, "Home"), (2, "Away")]
     home_team = models.CharField(max_length=200)
     away_team = models.CharField(max_length=200)
     kickoff = models.DateTimeField()
-    result = models.SmallIntegerField(blank=True, null=True)
+    result = models.SmallIntegerField(blank=True, null=True, choices=outcomes)
+    objects = Game_Manager()
 
     def __str__(self):
         return "{0:s}-{1:s}".format(self.home_team, self.away_team)
@@ -27,11 +35,7 @@ class Bookmaker(models.Manager):
 
 
 class Bet(models.Model):
-    outcomes = [
-        (0, ("Draw")),
-        (1, ("Home")),
-        (2, ("Away")),
-    ]
+    outcomes = [(0, "Draw"), (1, "Home"), (2, "Away")]
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     value = models.SmallIntegerField(default=0, choices=outcomes, verbose_name='outcome')
