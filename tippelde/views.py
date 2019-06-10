@@ -15,6 +15,11 @@ class Game_delete(DeleteView):
     success_url = reverse_lazy('management')
 
 
+class Bet_delete(DeleteView):
+    model = Bet
+    success_url = reverse_lazy('guesses')
+
+
 def index(request):
     return render(request, 'index.html')
 

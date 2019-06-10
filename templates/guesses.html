@@ -15,12 +15,14 @@
                 <th>Game</th>
                 <th>Kickoff</th>
                 <th>Guess</th>
+                <th>Delete</th>
             </tr>
             {% for g in upcoming %}
                 <tr>
                     <td><a href="{% url 'details' g.game.id %}">{{ g.game }}</a></td>
                     <td>{{ g.game.kickoff }}</td>
                     <td>{{ g.get_outcome }}</td>
+                    <td><a href="{% url 'delete_guess' g.id %}">delete</a></td>
                 </tr>
             {% endfor %}
         </table>

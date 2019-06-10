@@ -25,8 +25,10 @@ urlpatterns = [
     url(r'^games/', views.games, name='games'),
     url(r'^management/', views.manage, name='management'),
     url(r'^guesses/', views.guesses, name='guesses'),
+    url(r'^guess_delete/(?P<pk>\d+)/$', views.Bet_delete.as_view(template_name='confirm_delete.html'),
+        name='delete_guess'),
     url(r'^details/(?P<game_id>[0-9]+)/$', views.details, name='details'),
-    url(r'^game_delete/(?P<pk>\d+)/$', views.Game_delete.as_view(template_name='game_delete.html',),
+    url(r'^game_delete/(?P<pk>\d+)/$', views.Game_delete.as_view(template_name='confirm_delete.html'),
         name='delete_game'),
 ]
 """
