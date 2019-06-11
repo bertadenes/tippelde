@@ -8,5 +8,5 @@ setup(
     license='',
     author='bertadenes',
     author_email='mr.denes.berta@gmail.com',
-    description='Customized sweepstake project'
+    description='Customized sweepstake project', install_requires=['django']
 )
