@@ -1,18 +1,47 @@
 from django.db import models
 from django.conf import settings
-from tippelde.managers import Game_Manager, Bookmaker
 from tippelde.exceptions import EvaluatedException
+
+
+#Custom Managers
+class Game_Manager(models.Manager):
+    def create_Game(self, home, away, kickoff):
+        game = self.create(home_team=home, away_team=away, kickoff=kickoff)
+        return game
+
+
+class Bookmaker(models.Manager):
+    def create_Bet(self, user, game, value):
+        bet = self.create(user=user, game=game, value=value)
+        if not Score.objects.filter(user=user, tournament=game.tournament).exists():
+            score = Score.objects.create_Score(user, game.tournament)
+            score.save()
+        return bet
+
+
+class Tournament_Manager(models.Manager):
+    def create_Tournament(self, name):
+        tour = self.create(name=name)
+        return tour
+
+
+class Score_Manager(models.Manager):
+    def create_Score(self, user, tour):
+        score = self.create(user=user, tournament=tour)
+        return score
 
 
 # Create your models here.
 class Tournament(models.Model):
     name = models.CharField(max_length=200)
+    objects = Tournament_Manager
 
 
 class Score(models.Model):
     score = models.SmallIntegerField(default=0)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
+    object = Score_Manager
 
 
 class Question(models.Model):
