@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from tippelde.managers import Game_Manager, Bookmaker
+from tippelde.exceptions import EvaluatedException
 
 
 # Create your models here.
@@ -30,12 +32,6 @@ class Question(models.Model):
         return self.name
 
 
-class Game_Manager(models.Manager):
-    def create_Game(self, home, away, kickoff):
-        game = Game(home_team=home, away_team=away, kickoff=kickoff)
-        return game
-
-
 class Game(Question):
     home_team = models.CharField(max_length=200)
     away_team = models.CharField(max_length=200)
@@ -54,11 +50,18 @@ class Game(Question):
         except TypeError:
             return "Not registered"
 
-
-class Bookmaker(models.Manager):
-    def create_Bet(self, user, game, value):
-        bet = self.create(user=user, game=game, value=value)
-        return bet
+    def evaluate(self):
+        if self.tournament is None:
+            Game.objects.filter(id=self.id).update(evaluated=True)
+            return
+        if self.evaluated:
+            raise EvaluatedException("This game has already been evaluated.")
+        bets = Bet.objects.filter(game=self)
+        for bet in bets:
+            if bet.value == self.result:
+                Score.objects.filter(user=bet.user, tournament=self.tournament).update(score=models.F('score')+self.award)
+        Game.objects.filter(id=self.id).update(evaluated=True)
+        return
 
 
 class Bet(models.Model):
