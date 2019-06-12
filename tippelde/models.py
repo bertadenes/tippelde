@@ -3,17 +3,32 @@ from django.conf import settings
 
 
 # Create your models here.
+class Question(models.Model):
+    due = models.DateTimeField(default='2099-01-01 00:00:00')
+    name = models.CharField(blank=True, null=True, max_length=200)
+    description = models.TextField(blank=True, null=True, max_length=1000)
+    award = models.PositiveSmallIntegerField(default=10)
+    changed = models.PositiveSmallIntegerField(default=0)
+    penalty = models.PositiveSmallIntegerField(default=3)
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return self.name
+
+
 class Game_Manager(models.Manager):
     def create_Game(self, home, away, kickoff):
         game = Game(home_team=home, away_team=away, kickoff=kickoff)
         return game
 
 
-class Game(models.Model):
-    outcomes = [(0, "Draw"), (1, "Home"), (2, "Away")]
+class Game(Question):
     home_team = models.CharField(max_length=200)
     away_team = models.CharField(max_length=200)
     kickoff = models.DateTimeField()
+    outcomes = [(0, "Draw"), (1, "Home"), (2, "Away")]
     result = models.SmallIntegerField(blank=True, null=True, choices=outcomes)
     objects = Game_Manager()
 
