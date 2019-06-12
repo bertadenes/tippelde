@@ -3,6 +3,16 @@ from django.conf import settings
 
 
 # Create your models here.
+class Tournament(models.Model):
+    name = models.CharField(max_length=200)
+
+
+class Score(models.Model):
+    score = models.SmallIntegerField(default=0)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
+
+
 class Question(models.Model):
     due = models.DateTimeField(default='2099-01-01 00:00:00')
     name = models.CharField(blank=True, null=True, max_length=200)
@@ -10,6 +20,8 @@ class Question(models.Model):
     award = models.PositiveSmallIntegerField(default=10)
     changed = models.PositiveSmallIntegerField(default=0)
     penalty = models.PositiveSmallIntegerField(default=3)
+    tournament = models.ForeignKey(Tournament, null=True, on_delete=models.CASCADE)
+    evaluated = models.BooleanField(default=False)
 
     class Meta:
         abstract = True
