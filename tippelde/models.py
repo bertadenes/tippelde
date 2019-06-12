@@ -3,7 +3,37 @@ from django.conf import settings
 from tippelde.exceptions import EvaluatedException
 
 
-#Custom Managers
+# Create your models here.
+# Custom Managers
+# Tournament and score are for question organizing
+# class Tournament_Manager(models.Manager):
+#     def create_Tournament(self, name):
+#         tour = self.create(name=name)
+#         return tour
+#
+#
+# class Score_Manager(models.Manager):
+#     def create_Score(self, user, tour):
+#         score = self.create(user=user, tournament=tour)
+#         return score
+
+
+class Tournament(models.Model):
+    name = models.CharField(max_length=200)
+    # objects = Tournament_Manager
+
+    def __str__(self):
+        return self.name
+
+
+class Score(models.Model):
+    score = models.SmallIntegerField(default=0)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
+    # objects = Score_Manager
+
+
+# Game-Bet is the first pair of objects
 class Game_Manager(models.Manager):
     def create_Game(self, home, away, kickoff):
         game = self.create(home_team=home, away_team=away, kickoff=kickoff)
@@ -14,36 +44,12 @@ class Bookmaker(models.Manager):
     def create_Bet(self, user, game, value):
         bet = self.create(user=user, game=game, value=value)
         if not Score.objects.filter(user=user, tournament=game.tournament).exists():
-            score = Score.objects.create_Score(user, game.tournament)
+            score = Score.objects.create(user=user, tournament=game.tournament)
             score.save()
         return bet
 
 
-class Tournament_Manager(models.Manager):
-    def create_Tournament(self, name):
-        tour = self.create(name=name)
-        return tour
-
-
-class Score_Manager(models.Manager):
-    def create_Score(self, user, tour):
-        score = self.create(user=user, tournament=tour)
-        return score
-
-
-# Create your models here.
-class Tournament(models.Model):
-    name = models.CharField(max_length=200)
-    objects = Tournament_Manager
-
-
-class Score(models.Model):
-    score = models.SmallIntegerField(default=0)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
-    object = Score_Manager
-
-
+# Abstraction object to hold basic question attributes
 class Question(models.Model):
     due = models.DateTimeField(default='2099-01-01 00:00:00')
     name = models.CharField(blank=True, null=True, max_length=200)
