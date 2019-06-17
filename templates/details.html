@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Guesses</title>
+    <title>Game details</title>
 </head>
 <body>
 {% extends 'base.html' %}
@@ -10,7 +10,7 @@
 {% block content %}
     <p>{{ game }}</p>
     <p>{{ game.kickoff }}</p>
-    {% if game.result %}
+    {% if game.result is not None %}
         Outcome: {{ game.get_result }}
     {% endif %}
     {% if form and request.user|has_group:"Players"%}
@@ -24,7 +24,8 @@
         <form action="" method="post">
             {% csrf_token %}
             {{ form }}
-            <input type="submit" value="Submit">
+            <input type="submit" name="add_result" value="Register result">
+            <input type="submit" name="eval" value="Evaluate">
         </form>
     {% endif %}
 {% endblock %}

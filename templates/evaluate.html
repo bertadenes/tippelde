@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game evaluation</title>
+</head>
+<body>
+{% extends 'base.html' %}
+{% block content %}
+    <p>{{ game }}</p>
+    <p>{{ game.kickoff }}</p>
+    Registered result: {{ game.get_result }}
+    {% if bets %}
+        <table>
+            <tr>
+                <th>User</th>
+                <th>Guess</th>
+            </tr>
+            {% for b in bets %}
+                <tr>
+                    <td>{{ b.user.username }}</td>
+                    <td>{{ b.get_outcome }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No guesses on this game.</p>
+    {% endif %}
+{% endblock %}
+</body>
+</html>

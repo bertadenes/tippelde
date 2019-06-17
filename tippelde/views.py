@@ -108,3 +108,14 @@ def manage(request):
         form = Game_form()
     context['form'] = form
     return render(request, 'management.html', context)
+
+
+@login_required
+@user_passes_test(is_manager)
+def evaluate(request, game_id):
+    game = Game.objects.get(id=game_id)
+    bets = Bet.objects.filter(game=game)
+    context = {'game': game, 'bets': bets}
+    if game.result is None:
+        return HttpResponseRedirect('/management/')
+    return render(request, 'evaluate.html', context)

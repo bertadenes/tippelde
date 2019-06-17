@@ -29,13 +29,23 @@
             <tr>
                 <th>Game</th>
                 <th>Kickoff</th>
+                <th>Result</th>
                 <th>Delete</th>
+                <th>Evaluate</th>
             </tr>
             {% for g in results %}
                 <tr>
                     <td><a href="{% url 'details' g.id %}">{{ g }}</a></td>
                     <td>{{ g.kickoff }}</td>
-                    <td><a href="{% url 'delete_game' g.id %}">delete</a></td>
+                    <td>{{ g.get_result }}</td>
+                    <td>{% if not g.evaluated %}
+                        <a href="{% url 'delete_game' g.id %}">delete</a>
+                    </td>
+                    <td>
+                        {% if g.result is not None %}
+                            <a href="{% url 'evaluate' g.id %}">evaluate</a>
+                        {% endif %}
+                    {% endif %}</td>
                 </tr>
             {% endfor %}
         </table>

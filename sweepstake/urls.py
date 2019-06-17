@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^guess_delete/(?P<pk>\d+)/$', views.Bet_delete.as_view(template_name='confirm_delete.html'),
         name='delete_guess'),
     url(r'^details/(?P<game_id>[0-9]+)/$', views.details, name='details'),
+    url(r'^evaluate/(?P<game_id>[0-9]+)/$', views.evaluate, name='evaluate'),
     url(r'^game_delete/(?P<pk>\d+)/$', views.Game_delete.as_view(template_name='confirm_delete.html'),
         name='delete_game'),
 ]
