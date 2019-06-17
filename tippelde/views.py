@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib import messages
 from tippelde.models import Game, Bet
 from tippelde.forms import Bet_form, Game_form, Game_update_form
 from tippelde.extras import player_group, is_manager
@@ -12,7 +13,7 @@ from tippelde.extras import player_group, is_manager
 # Create your views here.
 class Game_delete(DeleteView):
     model = Game
-    success_url = reverse_lazy('management')
+    success_url = reverse_lazy('management/games/')
 
 
 class Bet_delete(DeleteView):
@@ -75,7 +76,7 @@ def details(request, game_id):
                     Game.objects.filter(id=game_id).update(home_team=form.cleaned_data['home_team'],
                                                            away_team=form.cleaned_data['away_team'],
                                                            kickoff=form.cleaned_data['kickoff'])
-                    return HttpResponseRedirect('/management/')
+                    return HttpResponseRedirect('/management/games/')
             else:
                 form = Game_form(instance=game)
         else:
@@ -83,7 +84,7 @@ def details(request, game_id):
                 form = Game_update_form(request.POST)
                 if form.is_valid():
                     Game.objects.filter(id=game_id).update(result=form.cleaned_data['result'])
-                    return HttpResponseRedirect('/management/')
+                    return HttpResponseRedirect('/management/games/')
             else:
                 form = Game_update_form(instance=game)
         context['form'] = form
@@ -107,7 +108,7 @@ def manage_games(request):
         form = Game_form(request.POST)
         if form.is_valid():
             game = Game.objects.create_Game(home=form.cleaned_data['home_team'], away=form.cleaned_data['away_team'],
-                                            kickoff=form.cleaned_data['kickoff'])
+                                            kickoff=form.cleaned_data['due'], due=form.cleaned_data['due'])
             game.save()
             return HttpResponseRedirect('/games/')
     else:
@@ -121,8 +122,13 @@ def manage_games(request):
 @user_passes_test(is_manager)
 def evaluate(request, game_id):
     game = Game.objects.get(id=game_id)
+    if game.result is None or game.evaluated:
+        return HttpResponseRedirect('/management/games/')
     bets = Bet.objects.filter(game=game)
     context = {'game': game, 'bets': bets}
-    if game.result is None:
-        return HttpResponseRedirect('/management/')
-    return render(request, 'evaluate.html', context)
+    if request.method == 'POST':
+        game.evaluate()
+        messages.info(request, "Bets for this game have been evaluated.")
+        return HttpResponseRedirect('/management/games/')
+    else:
+        return render(request, 'evaluate.html', context)

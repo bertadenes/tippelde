@@ -35,8 +35,8 @@ class Score(models.Model):
 
 # Game-Bet is the first pair of objects
 class Game_Manager(models.Manager):
-    def create_Game(self, home, away, kickoff):
-        game = self.create(home_team=home, away_team=away, kickoff=kickoff)
+    def create_Game(self, home, away, kickoff, due):
+        game = self.create(home_team=home, away_team=away, kickoff=kickoff, due=due)
         return game
 
 
@@ -51,7 +51,7 @@ class Bookmaker(models.Manager):
 
 # Abstraction object to hold basic question attributes
 class Question(models.Model):
-    due = models.DateTimeField(default='2099-01-01 00:00:00')
+    due = models.DateTimeField()
     name = models.CharField(blank=True, null=True, max_length=200)
     description = models.TextField(blank=True, null=True, max_length=1000)
     award = models.PositiveSmallIntegerField(default=10)

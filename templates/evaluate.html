@@ -23,8 +23,19 @@
                 </tr>
             {% endfor %}
         </table>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Evaluate the bets and close the game.">
+        </form>
     {% else %}
         <p>No guesses on this game.</p>
+    {% endif %}
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
     {% endif %}
 {% endblock %}
 </body>
