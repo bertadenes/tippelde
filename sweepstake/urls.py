@@ -23,6 +23,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     url(r'^$', views.index, name='index'),
     url(r'^games/', views.games, name='games'),
+    url(r'^tables/', views.tables, name='tables'),
     url(r'^management/home/', views.manage, name='management'),
     url(r'^management/games/', views.manage_games, name='manage_games'),
     url(r'^guesses/', views.guesses, name='guesses'),

@@ -2,7 +2,7 @@ import datetime
 from django.utils import timezone
 from django import forms
 from django.core.exceptions import ValidationError
-from tippelde.models import Bet, Game
+from tippelde.models import Bet, Game, Tournament
 
 
 class Bet_form(forms.ModelForm):
@@ -32,3 +32,7 @@ class Game_update_form(forms.ModelForm):
     class Meta:
         model = Game
         fields = ('result', )
+
+
+class Tournament_form(forms.Form):
+    name = forms.ChoiceField(choices=[(t.name, t.name) for t in Tournament.objects.all()])

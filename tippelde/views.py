@@ -5,8 +5,8 @@ from django.utils import timezone
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
-from tippelde.models import Game, Bet
-from tippelde.forms import Bet_form, Game_form, Game_update_form
+from tippelde.models import Game, Bet, Tournament, Score
+from tippelde.forms import Bet_form, Game_form, Game_update_form, Tournament_form
 from tippelde.extras import player_group, is_manager
 
 
@@ -92,6 +92,22 @@ def details(request, game_id):
 
 
 @login_required
+def tables(request):
+    context = {}
+    if request.method == "POST":
+        form = Tournament_form(request.POST)
+        if form.is_valid():
+            tour = Tournament.objects.filter(name=form.cleaned_data['name']).get()
+            scores = Score.objects.filter(tournament=tour).order_by('-score')
+            context['scores'] = scores
+            form = Tournament_form()
+    else:
+        form = Tournament_form()
+    context['form'] = form
+    return render(request, 'table.html', context)
+
+
+@login_required
 @user_passes_test(is_manager)
 def manage(request):
     return render(request, 'management/home.html')
@@ -114,7 +130,6 @@ def manage_games(request):
     else:
         form = Game_form()
     context['form'] = form
-    print("Renders this")
     return render(request, 'management/games.html', context)
 
 

@@ -19,7 +19,7 @@ from tippelde.exceptions import EvaluatedException
 
 
 class Tournament(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     # objects = Tournament_Manager
 
     def __str__(self):
