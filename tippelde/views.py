@@ -93,6 +93,12 @@ def details(request, game_id):
 @login_required
 @user_passes_test(is_manager)
 def manage(request):
+    return render(request, 'management/home.html')
+
+
+@login_required
+@user_passes_test(is_manager)
+def manage_games(request):
     now = timezone.now()
     upcoming = Game.objects.order_by('kickoff').filter(kickoff__gte=now)
     results = Game.objects.order_by('-kickoff').exclude(kickoff__gte=now)
@@ -107,7 +113,8 @@ def manage(request):
     else:
         form = Game_form()
     context['form'] = form
-    return render(request, 'management.html', context)
+    print("Renders this")
+    return render(request, 'management/games.html', context)
 
 
 @login_required

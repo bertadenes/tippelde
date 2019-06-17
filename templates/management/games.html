@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game management</title>
+</head>
 <body>
-{% extends 'base.html' %}
-
+{% extends 'management/home.html' %}
 {% block content %}
     <h3>Upcoming</h3>
     {% if upcoming %}
@@ -60,8 +63,4 @@
     </form>
 {% endblock %}
 </body>
-<head>
-    <meta charset="UTF-8">
-    <title>Management</title>
-</head>
 </html>

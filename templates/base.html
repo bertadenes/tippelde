@@ -6,24 +6,26 @@
 </head>
 <body>
 {% load custom_tags %}
-<table>
-    <tr>
-        {% if user.is_authenticated %}
-            <th>Welcome {{ user.username }}!</th>
-            {% if request.user|has_group:"Players" %}
-                <th><a href="{% url 'games' %}">Games</a></th>
-                <th><a href="{% url 'guesses' %}">Guesses</a></th>
+{% block menu %}
+    <table>
+        <tr>
+            {% if user.is_authenticated %}
+                <th>Welcome {{ user.username }}!</th>
+                {% if request.user|has_group:"Players" %}
+                    <th><a href="{% url 'games' %}">Games</a></th>
+                    <th><a href="{% url 'guesses' %}">Guesses</a></th>
+                {% endif %}
+                {% if request.user.username == "siteadmin" %}
+                    <th><a href="{% url 'management' %}">Management</a></th>
+                {% endif %}
+                <th><a href="{% url 'logout' %}">logout</a></th>
+            {% else %}
+                <th>Please login to see details.</th>
+                <th><a href="{% url 'login' %}">login</a></th>
             {% endif %}
-            {% if request.user.username == "siteadmin" %}
-                <th><a href="{% url 'management' %}">Management</a></th>
-            {% endif %}
-            <th><a href="{% url 'logout' %}">logout</a></th>
-        {% else %}
-            <th>Please login to see details.</th>
-            <th><a href="{% url 'login' %}">login</a></th>
-        {% endif %}
-    </tr>
-</table>
+        </tr>
+    </table>
+{% endblock menu %}
 {% block content %}{% endblock content %}
 </body>
 </html>

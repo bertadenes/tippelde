@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Management</title>
+</head>
+<body>
+{% extends 'base.html' %}
+{% block menu %}
+    {{ block.super }}
+    <table>
+        <th><a href="{% url 'manage_games' %}">Games</a></th>
+    </table>
+{% endblock menu %}
+{% block content %}
+    This is the management homepage
+{% endblock content %}
+</body>
+</html>
