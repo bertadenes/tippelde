@@ -6,8 +6,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from tippelde.models import Game, Bet, Tournament, Score
-from tippelde.forms import Bet_form, Game_form, Game_update_form, Tournament_form
-from tippelde.extras import player_group, is_manager
+from tippelde.forms import Bet_form, Game_form, Game_update_form, Tournament_form, Evaluate
+from tippelde.extras import player_group, is_manager, ev
 
 
 # Create your views here.
@@ -22,7 +22,16 @@ class Bet_delete(DeleteView):
 
 
 def index(request):
-    return render(request, 'index.html')
+    context = {}
+    if request.method == "POST":
+        form = Evaluate(request.POST)
+        if form.is_valid():
+            context['score'] = ev(form.cleaned_data['home_goals'], form.cleaned_data['away_goals'],
+                                  form.cleaned_data['home_guess'], form.cleaned_data['away_guess'])
+    else:
+        form = Evaluate()
+    context['form'] = form
+    return render(request, 'index.html', context)
 
 
 def games(request):

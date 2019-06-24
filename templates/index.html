@@ -10,7 +10,14 @@
 {% block content %}
 
     <p>Landing page</p>
-
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" name="try" value="try">
+    </form>
+    {% if score is not None %}
+        <p>Score: {{ score }}</p>
+    {%  endif %}
 {% endblock %}
 </body>
 </html>

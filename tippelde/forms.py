@@ -36,3 +36,10 @@ class Game_update_form(forms.ModelForm):
 
 class Tournament_form(forms.Form):
     name = forms.ChoiceField(choices=[(t.name, t.name) for t in Tournament.objects.all()])
+
+
+class Evaluate(forms.Form):
+    home_goals = forms.IntegerField()
+    away_goals = forms.IntegerField()
+    home_guess = forms.IntegerField()
+    away_guess = forms.IntegerField()
