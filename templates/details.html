@@ -10,8 +10,8 @@
 {% block content %}
     <p>{{ game }}</p>
     <p>{{ game.kickoff }}</p>
-    {% if game.result is not None %}
-        Outcome: {{ game.get_result }}
+    {% if game.home_goals is not None and game.away_goals is not None%}
+        <p>Outcome: {{ game.get_result }} {{ game.home_goals }}-{{ game.away_goals }}</p>
     {% endif %}
     {% if form and request.user|has_group:"Players"%}
         <p>Guess the outcome:</p>

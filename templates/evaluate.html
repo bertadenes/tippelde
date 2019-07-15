@@ -9,7 +9,7 @@
 {% block content %}
     <p>{{ game }}</p>
     <p>{{ game.kickoff }}</p>
-    Registered result: {{ game.get_result }}
+    <p>Registered result: {{ game.get_result }} {{ game.home_goals }}-{{ game.away_goals }}</p>
     {% if bets %}
         <table>
             <tr>
@@ -19,7 +19,7 @@
             {% for b in bets %}
                 <tr>
                     <td>{{ b.user.username }}</td>
-                    <td>{{ b.get_outcome }}</td>
+                    <td>{{ b.get_outcome }} {{ b.home_guess }}-{{ b.away_guess }}</td>
                 </tr>
             {% endfor %}
         </table>

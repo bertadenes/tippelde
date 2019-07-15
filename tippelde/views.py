@@ -62,7 +62,8 @@ def details(request, game_id):
             if request.method == 'POST':
                 form = Bet_form(request.POST)
                 if form.is_valid():
-                    Bet.objects.filter(user=request.user, game=game).update(value=form.cleaned_data['value'])
+                    Bet.objects.filter(user=request.user, game=game).update(home_guess=form.cleaned_data['home_guess'],
+                                                                            away_guess=form.cleaned_data['away_guess'])
                     return HttpResponseRedirect('/guesses/')
             else:
                 bet = Bet.objects.filter(user=request.user, game=game).get()
@@ -71,7 +72,9 @@ def details(request, game_id):
             if request.method == 'POST':
                 form = Bet_form(request.POST)
                 if form.is_valid():
-                    bet = Bet.objects.create_Bet(game=game, user=request.user, value=form.cleaned_data['value'])
+                    bet = Bet.objects.create_Bet(game=game, user=request.user,
+                                                 home_guess=form.cleaned_data['home_guess'],
+                                                 away_guess=form.cleaned_data['away_guess'])
                     bet.save()
                     return HttpResponseRedirect('/guesses/')
             else:
@@ -92,7 +95,8 @@ def details(request, game_id):
             if request.method == 'POST':
                 form = Game_update_form(request.POST)
                 if form.is_valid():
-                    Game.objects.filter(id=game_id).update(result=form.cleaned_data['result'])
+                    Game.objects.filter(id=game_id).update(home_goals=form.cleaned_data['home_goals'],
+                                                           away_goals=form.cleaned_data['away_goals'])
                     return HttpResponseRedirect('/management/games/')
             else:
                 form = Game_update_form(instance=game)
@@ -146,7 +150,7 @@ def manage_games(request):
 @user_passes_test(is_manager)
 def evaluate(request, game_id):
     game = Game.objects.get(id=game_id)
-    if game.result is None or game.evaluated:
+    if game.get_result is "Not registered" or game.evaluated:
         return HttpResponseRedirect('/management/games/')
     bets = Bet.objects.filter(game=game)
     context = {'game': game, 'bets': bets}
