@@ -1,1 +1,1 @@
-web: gunicorn sweepstake:app
+web: gunicorn tippelde:app
