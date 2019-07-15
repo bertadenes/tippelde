@@ -1,1 +1,1 @@
-web: gunicorn tippelde:app
+web: gunicorn sweepstake.wsgi
