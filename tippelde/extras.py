@@ -5,7 +5,7 @@ def player_group(user):
 
 
 def is_manager(user):
-    if user.username == "siteadmin":
+    if user.username == "guber":
         return True
     else:
         return False
