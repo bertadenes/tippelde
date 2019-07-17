@@ -16,7 +16,7 @@
                     <th><a href="{% url 'guesses' %}">Guesses</a></th>
                 {% endif %}
                 <th><a href="{% url 'tables' %}">Tables</a></th>
-                {% if request.user.username == "siteadmin" %}
+                {% if request.user.username == "guber" %}
                     <th><a href="{% url 'management' %}">Management</a></th>
                 {% endif %}
                 <th><a href="{% url 'logout' %}">logout</a></th>

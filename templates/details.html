@@ -20,7 +20,7 @@
             {{ form }}
             <input type="submit" value="Submit">
         </form>
-    {% elif form and request.user.username == "siteadmin"%}
+    {% elif form and request.user.username == "guber"%}
         <form action="" method="post">
             {% csrf_token %}
             {{ form }}
