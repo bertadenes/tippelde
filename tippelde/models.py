@@ -78,6 +78,7 @@ class Game(Question):
     home_goals = models.SmallIntegerField(blank=True, null=True)
     away_goals = models.SmallIntegerField(blank=True, null=True)
     objects = Game_Manager()
+    multiplier = models.SmallIntegerField(default=1)
 
     def __str__(self):
         return "{0:s}-{1:s}".format(self.home_team, self.away_team)
@@ -109,7 +110,7 @@ class Game(Question):
         for bet in bets:
             # obsolete with storing the actual score
             # if bet.value == self.result:
-            self.award = ev(self.home_goals, self.away_goals, bet.home_guess, bet.away_guess)
+            self.award = ev(self.home_goals, self.away_goals, bet.home_guess, bet.away_guess) * self.multiplier
             Score.objects.filter(user=bet.user, tournament=self.tournament).update(score=models.F('score')+self.award)
         Game.objects.filter(id=self.id).update(evaluated=True)
         return
