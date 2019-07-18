@@ -80,6 +80,10 @@ def details(request, game_id):
             else:
                 form = Bet_form()
         context['form'] = form
+    elif game.kickoff < now:
+        bets = Bet.objects.filter(game=game)
+        context['bets'] = bets
+        context['past'] = True
     if is_manager(request.user):
         if game.kickoff >= now:
             if request.method == 'POST':
