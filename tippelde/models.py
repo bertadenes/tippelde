@@ -131,7 +131,7 @@ class Bet(models.Model):
     objects = Bookmaker()
 
     def __str__(self):
-        return "{0:s} {1:d}-{2:d}".format(self.game.__str__(), self.home_guess, self.away_guess)
+        return "{0:s} {1:d}-{2:d} by {3:s}".format(self.game.__str__(), self.home_guess, self.away_guess, self.user)
 
     def get_outcome(self):
         if self.home_guess == self.away_guess:
