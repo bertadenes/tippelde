@@ -169,8 +169,8 @@ def evaluate(request, game_id):
 @login_required
 @user_passes_test(is_manager)
 def manage_sq(request):
-    now = timezone.now()
-    context = {}
+    sqs = StringQuestion.objects.order_by('due')
+    context = {'sqs': sqs}
     if request.method == 'POST':
         form = SQForm(request.POST)
         if form.is_valid():

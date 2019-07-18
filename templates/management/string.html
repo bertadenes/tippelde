@@ -7,6 +7,24 @@
 <body>
 {% extends 'management/home.html' %}
 {% block content %}
+    {% if sqs %}
+    <table>
+        <tr>
+            <th>Question</th>
+            <th>Due</th>
+{#            <th>Delete</th>#}
+        </tr>
+        {% for q in sqs %}
+            <tr>
+                <td>{{ q.name }}</td>
+                <td>{{ q.due }}</td>
+{#                <td><a href="{% url 'delete_game' g.id %}">delete</a></td>#}
+            </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>No question available.</p>
+    {% endif %}
     <h3>Add a new question</h3>
     <form action="" method="post">
         {% csrf_token %}
