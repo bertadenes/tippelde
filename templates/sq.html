@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Question details</title>
+</head>
+<body>
+{% extends 'base.html' %}
+{% load custom_tags %}
+{% block content %}
+    <p>{{ sq.name }}</p>
+    {% if sq.description %}
+        <p>{{ sq.description }}</p>
+    {% endif %}
+    <p>Closes at {{ sq.due }}</p>
+    {% if past %}
+        {% if sas %}
+            <p>Guesses on this question:</p>
+            <table>
+                <tr>
+                    <th>User</th>
+                    <th>Guess</th>
+                </tr>
+                {% for a in sas %}
+                    <tr>
+                        <td>{{ s.user.username }}</td>
+                        <td>{{ s.answer }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No guesses.</p>
+        {% endif %}
+    {% endif %}
+    {% if form and request.user|has_group:"Players"%}
+        <p>Guess the outcome:</p>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="Submit">
+        </form>
+    {% elif form %}
+        {% if request.user.username == "guber" or request.user.username == "berta"%}
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ form }}
+                <input type="submit" name="add_result" value="Register result">
+            </form>
+{#            <a href="{% url 'evaluate' sq.id %}">evaluate</a>#}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+</body>
+</html>

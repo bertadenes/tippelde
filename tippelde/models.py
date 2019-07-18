@@ -121,7 +121,7 @@ class Game(Question):
 
 class AnswerManager(models.Manager):
     def create_answer(self, user, question, answer):
-        bet = self.create(user, question, answer)
+        bet = self.create(user=user, question=question, answer=answer)
         if not Score.objects.filter(user=user, tournament=question.tournament).exists():
             score = Score.objects.create(user=user, tournament=question.tournament)
             score.save()
@@ -134,6 +134,9 @@ class Answer(models.Model):
 
     class Meta:
         abstract = True
+
+    def __str__(self):
+        return "Answer by {0:s}".format(self.user.__str__())
 
 
 class Bet(Answer):

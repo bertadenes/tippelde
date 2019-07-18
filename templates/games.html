@@ -51,7 +51,7 @@
         </tr>
         {% for q in sqs %}
             <tr>
-                <td>{{ q.name }}</td>
+                <td><a href="{% url 'sq' q.id %}">{{ q.name }}</a></td>
                 <td>{{ q.due }}</td>
             </tr>
         {% endfor %}

@@ -6,7 +6,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from tippelde.models import Game, Bet, Tournament, Score, StringQuestion, StringAnswer
-from tippelde.forms import Bet_form, Game_form, Game_update_form, Tournament_form, Evaluate, SQForm
+from tippelde.forms import Bet_form, Game_form, Game_update_form, Tournament_form, Evaluate, SQForm, SAForm,\
+    SQ_update_form
 from tippelde.extras import player_group, is_manager, ev
 
 
@@ -188,3 +189,60 @@ def manage_sq(request):
         form = SQForm()
     context['form'] = form
     return render(request, 'management/string.html', context)
+
+
+@login_required
+def sq(request, sq_id):
+    now = timezone.now()
+    sq = StringQuestion.objects.get(id=sq_id)
+    context = {'sq': sq}
+    if player_group(request.user) and sq.due > now:
+        if StringAnswer.objects.filter(user=request.user, question=sq).exists():
+            if request.method == 'POST':
+                form = SAForm(request.POST)
+                if form.is_valid():
+                    StringAnswer.objects.filter(user=request.user,
+                                                question=sq).update(answer=form.cleaned_data['answer'])
+                    return HttpResponseRedirect('/guesses/')
+            else:
+                sa = StringAnswer.objects.filter(user=request.user, question=sq).get()
+                form = SAForm(instance=sa)
+        else:
+            if request.method == 'POST':
+                form = SAForm(request.POST)
+                if form.is_valid():
+                    sa = StringAnswer.objects.create_answer(request.user, sq, form.cleaned_data['answer'])
+                    sa.save()
+                    return HttpResponseRedirect('/guesses/')
+            else:
+                form = SAForm()
+        context['form'] = form
+    elif sq.due < now:
+        sas = StringAnswer.objects.filter(question=sq)
+        context['sas'] = sas
+        context['past'] = True
+    if is_manager(request.user):
+        if sq.due >= now:
+            if request.method == 'POST':
+                form = SQForm(request.POST)
+                if form.is_valid():
+                    StringQuestion.objects.filter(id=sq_id).update(name=form.cleaned_data['name'],
+                                                                   description=form.cleaned_data['description'],
+                                                                   due=form.cleaned_data['due'],
+                                                                   award=form.cleaned_data['award'],
+                                                                   changed=form.cleaned_data['changed'],
+                                                                   penalty=form.cleaned_data['penalty'],
+                                                                   tournament=form.cleaned_data['tournament'])
+                    return HttpResponseRedirect('/management/sq/')
+            else:
+                form = SQForm(instance=sq)
+        else:
+            if request.method == 'POST':
+                form = SQ_update_form(request.POST)
+                if form.is_valid():
+                    StringQuestion.objects.filter(id=sq_id).update(correct_answer=form.cleaned_data['correct_answer'])
+                    return HttpResponseRedirect('/management/sq/')
+            else:
+                form = SQ_update_form(instance=sq)
+        context['form'] = form
+    return render(request, 'sq.html', context)
