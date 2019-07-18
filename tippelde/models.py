@@ -33,6 +33,9 @@ class Score(models.Model):
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     # objects = Score_Manager
 
+    def __str__(self):
+        return "{0:s} in {1:s}".format(self.user, self.tournament)
+
 
 # Game-Bet is the first pair of objects
 class Game_Manager(models.Manager):
@@ -137,3 +140,7 @@ class Bet(models.Model):
             return "Home"
         elif self.home_guess < self.away_guess:
             return "Away"
+
+
+class StringQuestion(Question):
+    pass
