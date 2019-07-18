@@ -119,11 +119,27 @@ class Game(Question):
         return
 
 
-class Bet(models.Model):
+class AnswerManager(models.Manager):
+    def create_answer(self, user, question, answer):
+        bet = self.create(user, question, answer)
+        if not Score.objects.filter(user=user, tournament=question.tournament).exists():
+            score = Score.objects.create(user=user, tournament=question.tournament)
+            score.save()
+        return bet
+
+
+class Answer(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    objects = AnswerManager()
+
+    class Meta:
+        abstract = True
+
+
+class Bet(Answer):
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
     home_guess = models.SmallIntegerField()
     away_guess = models.SmallIntegerField()
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     # obsolete with storing the actual score
     # outcomes = [(0, "Draw"), (1, "Home"), (2, "Away")]
     # value = models.SmallIntegerField(default=0, choices=outcomes, verbose_name='outcome')
@@ -145,3 +161,9 @@ class Bet(models.Model):
 
 class StringQuestion(Question):
     pass
+
+
+class StringAnswer(Answer):
+    question = models.ForeignKey(StringQuestion, on_delete=models.CASCADE)
+    answer = models.CharField(max_length=200)
+

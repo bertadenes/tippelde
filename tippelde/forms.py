@@ -2,7 +2,7 @@ import datetime
 from django.utils import timezone
 from django import forms
 from django.core.exceptions import ValidationError
-from tippelde.models import Bet, Game, Tournament
+from tippelde.models import Bet, Game, Tournament, StringQuestion, StringAnswer
 
 
 class Bet_form(forms.ModelForm):
@@ -44,3 +44,15 @@ class Evaluate(forms.Form):
     away_goals = forms.IntegerField()
     home_guess = forms.IntegerField()
     away_guess = forms.IntegerField()
+
+
+class SQForm(forms.ModelForm):
+    class Meta:
+        model = StringQuestion
+        fields = '__all__'
+
+
+class SAForm(forms.ModelForm):
+    class Meta:
+        model = StringAnswer
+        fields = ('answer', )
