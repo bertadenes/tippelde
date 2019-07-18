@@ -160,10 +160,9 @@ class Bet(Answer):
 
 
 class StringQuestion(Question):
-    pass
+    correct_answer = models.CharField(blank=True, null=True, max_length=200)
 
 
 class StringAnswer(Answer):
     question = models.ForeignKey(StringQuestion, on_delete=models.CASCADE)
     answer = models.CharField(max_length=200)
-

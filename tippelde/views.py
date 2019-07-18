@@ -38,7 +38,8 @@ def games(request):
     now = timezone.now()
     upcoming = Game.objects.order_by('kickoff').filter(kickoff__gte=now)
     results = Game.objects.order_by('-kickoff').exclude(kickoff__gte=now)
-    context = {'results': results, 'upcoming': upcoming}
+    sqs = StringQuestion.objects.order_by('due').filter(due__gte=now)
+    context = {'results': results, 'upcoming': upcoming, 'sqs': sqs}
     return render(request, 'games.html', context)
 
 

@@ -52,6 +52,12 @@ class SQForm(forms.ModelForm):
         fields = ('name', 'description', 'due', 'award', 'changed', 'penalty', 'tournament')
 
 
+class SQ_update_form(forms.ModelForm):
+    class Meta:
+        model = StringQuestion
+        fields = ('correct_answer', )
+
+
 class SAForm(forms.ModelForm):
     class Meta:
         model = StringAnswer
