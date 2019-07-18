@@ -42,8 +42,8 @@ class Game_Manager(models.Manager):
 
 
 class Bookmaker(models.Manager):
-    def create_Bet(self, user, game, value):
-        bet = self.create(user=user, game=game, value=value)
+    def create_Bet(self, user, game, home_guess, away_guess):
+        bet = self.create(user=user, game=game, home_guess=home_guess, away_guess=away_guess)
         if not Score.objects.filter(user=user, tournament=game.tournament).exists():
             score = Score.objects.create(user=user, tournament=game.tournament)
             score.save()
