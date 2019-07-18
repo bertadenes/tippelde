@@ -34,7 +34,7 @@ class Score(models.Model):
     # objects = Score_Manager
 
     def __str__(self):
-        return "{0:s} in {1:s}".format(self.user, self.tournament)
+        return "{0:s} in {1:s}".format(self.user.__str__(), self.tournament.__str__())
 
 
 # Game-Bet is the first pair of objects
@@ -131,7 +131,8 @@ class Bet(models.Model):
     objects = Bookmaker()
 
     def __str__(self):
-        return "{0:s} {1:d}-{2:d} by {3:s}".format(self.game.__str__(), self.home_guess, self.away_guess, self.user)
+        return "{0:s} {1:d}-{2:d} by {3:s}".format(self.game.__str__(), self.home_guess,
+                                                   self.away_guess, self.user.__str__())
 
     def get_outcome(self):
         if self.home_guess == self.away_guess:
