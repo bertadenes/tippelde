@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^tables/', views.tables, name='tables'),
     url(r'^management/home/', views.manage, name='management'),
     url(r'^management/games/', views.manage_games, name='manage_games'),
+    url(r'^management/sq/', views.manage_sq, name='manage_sq'),
     url(r'^guesses/', views.guesses, name='guesses'),
     url(r'^guess_delete/(?P<pk>\d+)/$', views.Bet_delete.as_view(template_name='confirm_delete.html'),
         name='delete_guess'),

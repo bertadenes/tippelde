@@ -5,8 +5,8 @@ from django.utils import timezone
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
-from tippelde.models import Game, Bet, Tournament, Score
-from tippelde.forms import Bet_form, Game_form, Game_update_form, Tournament_form, Evaluate
+from tippelde.models import Game, Bet, Tournament, Score, StringQuestion, StringAnswer
+from tippelde.forms import Bet_form, Game_form, Game_update_form, Tournament_form, Evaluate, SQForm
 from tippelde.extras import player_group, is_manager, ev
 
 
@@ -143,7 +143,7 @@ def manage_games(request):
             game = Game.objects.create_Game(home=form.cleaned_data['home_team'], away=form.cleaned_data['away_team'],
                                             kickoff=form.cleaned_data['due'], due=form.cleaned_data['due'])
             game.save()
-            return HttpResponseRedirect('/games/')
+            return HttpResponseRedirect('management/games.html')
     else:
         form = Game_form()
     context['form'] = form
@@ -164,3 +164,26 @@ def evaluate(request, game_id):
         return HttpResponseRedirect('/management/games/')
     else:
         return render(request, 'evaluate.html', context)
+
+
+@login_required
+@user_passes_test(is_manager)
+def manage_sq(request):
+    now = timezone.now()
+    context = {}
+    if request.method == 'POST':
+        form = SQForm(request.POST)
+        if form.is_valid():
+            sq = StringQuestion.objects.create(name=form.cleaned_data['name'],
+                                               description=form.cleaned_data['description'],
+                                               due=form.cleaned_data['due'],
+                                               award=form.cleaned_data['award'],
+                                               changed=form.cleaned_data['changed'],
+                                               penalty=form.cleaned_data['penalty'],
+                                               tournament=form.cleaned_data['tournament'])
+            sq.save()
+            return HttpResponseRedirect('/management/sq.html')
+    else:
+        form = SQForm()
+    context['form'] = form
+    return render(request, 'management/string.html', context)
