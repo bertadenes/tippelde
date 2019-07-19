@@ -22,6 +22,16 @@ class Bet_delete(DeleteView):
     success_url = reverse_lazy('guesses')
 
 
+class SADel(DeleteView):
+    model = StringAnswer
+    success_url = reverse_lazy('guesses')
+
+
+class SQDel(DeleteView):
+    model = StringQuestion
+    success_url = reverse_lazy('management/sq/')
+
+
 def index(request):
     context = {}
     if request.method == "POST":
@@ -50,7 +60,8 @@ def guesses(request):
     now = timezone.now()
     upcoming = Bet.objects.filter(user=request.user).filter(game__kickoff__gte=now).order_by('game__kickoff')
     results = Bet.objects.filter(user=request.user).exclude(game__kickoff__gte=now).order_by('-game__kickoff')
-    context = {'results': results, 'upcoming': upcoming}
+    sas = StringAnswer.objects.filter(user=request.user).order_by('question__due')
+    context = {'results': results, 'upcoming': upcoming, 'sas': sas}
     return render(request, 'guesses.html', context)
 
 

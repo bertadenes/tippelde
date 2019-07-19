@@ -12,13 +12,13 @@
         <tr>
             <th>Question</th>
             <th>Due</th>
-{#            <th>Delete</th>#}
+            <th>Delete</th>
         </tr>
         {% for q in sqs %}
             <tr>
                 <td><a href="{% url 'sq' q.id %}">{{ q.name }}</a></td>
                 <td>{{ q.due }}</td>
-{#                <td><a href="{% url 'delete_game' g.id %}">delete</a></td>#}
+                <td><a href="{% url 'delete_sq' q.id %}">delete</a></td>
             </tr>
         {% endfor %}
     </table>
