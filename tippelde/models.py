@@ -187,3 +187,29 @@ class StringAnswer(Answer):
 
     def __str__(self):
         return "Answer to {1:s} by {0:s}".format(self.user.__str__(), self.question.__str__())
+
+
+class NumericQuestion(Question):
+    correct_answer = models.PositiveSmallIntegerField(blank=True, null=True)
+
+    def evaluate(self):
+        if self.tournament is None:
+            NumericQuestion.objects.filter(id=self.id).update(evaluated=True)
+            return
+        if self.evaluated:
+            raise EvaluatedException("This question has already been evaluated.")
+        answers = NumericAnswer.objects.filter(question=self)
+        for a in answers:
+            if a.answer == self.correct_answer:
+                award = self.award - (a.changed * self.penalty)
+                Score.objects.filter(user=a.user, tournament=self.tournament).update(score=models.F('score')+award)
+        NumericQuestion.objects.filter(id=self.id).update(evaluated=True)
+        return
+
+
+class NumericAnswer(Answer):
+    question = models.ForeignKey(NumericQuestion, on_delete=models.CASCADE)
+    answer = models.PositiveSmallIntegerField()
+
+    def __str__(self):
+        return "Answer to {1:s} by {0:s}".format(self.user.__str__(), self.question.__str__())
