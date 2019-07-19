@@ -8,26 +8,26 @@
 {% extends 'base.html' %}
 {% load custom_tags %}
 {% block content %}
-    <p>{{ sq.name }}</p>
-    {% if sq.description %}
-        <p>{{ sq.description }}</p>
+    <p>{{ q.name }}</p>
+    {% if q.description %}
+        <p>{{ q.description }}</p>
     {% endif %}
-    <p>Closes at {{ sq.due }}</p>
+    <p>Closes at {{ q.due }}</p>
     {% if changed != -1 %}
-        <p>Changes {{ changed }}/{{ sq.changes }}</p>
+        <p>Changes {{ changed }}/{{ q.changes }}</p>
     {% endif %}
     {% if past %}
-        {% if sas %}
+        {% if ans %}
             <p>Guesses on this question:</p>
             <table>
                 <tr>
                     <th>User</th>
                     <th>Guess</th>
                 </tr>
-                {% for a in sas %}
+                {% for a in ans %}
                     <tr>
-                        <td>{{ s.user.username }}</td>
-                        <td>{{ s.answer }}</td>
+                        <td>{{ a.user.username }}</td>
+                        <td>{{ a.answer }}</td>
                     </tr>
                 {% endfor %}
             </table>
@@ -35,7 +35,7 @@
             <p>No guesses.</p>
         {% endif %}
     {% endif %}
-    {% if changed < sq.changes %}
+    {% if changed < q.changes %}
         {% if form and request.user|has_group:"Players"%}
             <p>Guess the outcome:</p>
             <form action="" method="post">
@@ -52,7 +52,7 @@
                 {{ form }}
                 <input type="submit" name="add_result" value="Register result">
             </form>
-            <a href="{% url 'evaluate_sq' sq.id %}">evaluate</a>
+            <a href="{% url 'evaluate_sq' q.id %}">evaluate</a>
         {% endif %}
     {% endif %}
 

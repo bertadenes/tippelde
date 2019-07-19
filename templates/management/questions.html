@@ -7,18 +7,26 @@
 <body>
 {% extends 'management/home.html' %}
 {% block content %}
-    {% if sqs %}
+    {% if qs %}
     <table>
         <tr>
             <th>Question</th>
             <th>Due</th>
             <th>Delete</th>
         </tr>
-        {% for q in sqs %}
+        {% for q in qs %}
             <tr>
-                <td><a href="{% url 'sq' q.id %}">{{ q.name }}</a></td>
+                {% if type == "string" %}
+                    <td><a href="{% url 'sq' q.id %}">{{ q.name }}</a></td>
+                {% elif type == "numeric" %}
+                    <td><a href="{% url 'nq' q.id %}">{{ q.name }}</a></td>
+                {% endif %}
                 <td>{{ q.due }}</td>
-                <td><a href="{% url 'delete_sq' q.id %}">delete</a></td>
+                {% if type == "string" %}
+                    <td><a href="{% url 'delete_sq' q.id %}">delete</a></td>
+                {% elif type == "numeric" %}
+                    <td><a href="{% url 'delete_nq' q.id %}">delete</a></td>
+                {% endif %}
             </tr>
         {% endfor %}
     </table>
