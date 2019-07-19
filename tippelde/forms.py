@@ -2,7 +2,7 @@ import datetime
 from django.utils import timezone
 from django import forms
 from django.core.exceptions import ValidationError
-from tippelde.models import Bet, Game, Tournament, StringQuestion, StringAnswer
+from tippelde.models import Bet, Game, Tournament, StringQuestion, StringAnswer, NumericQuestion, NumericAnswer
 
 
 class Bet_form(forms.ModelForm):
@@ -61,4 +61,22 @@ class SQ_update_form(forms.ModelForm):
 class SAForm(forms.ModelForm):
     class Meta:
         model = StringAnswer
+        fields = ('answer', )
+
+
+class NQForm(forms.ModelForm):
+    class Meta:
+        model = NumericQuestion
+        fields = ('name', 'description', 'due', 'award', 'changes', 'penalty', 'tournament')
+
+
+class NQ_update_form(forms.ModelForm):
+    class Meta:
+        model = NumericQuestion
+        fields = ('correct_answer', )
+
+
+class NAForm(forms.ModelForm):
+    class Meta:
+        model = NumericAnswer
         fields = ('answer', )
