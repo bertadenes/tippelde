@@ -13,6 +13,7 @@
         <p>{{ sq.description }}</p>
     {% endif %}
     <p>Closes at {{ sq.due }}</p>
+    <p>Changes {{ changed }}/{{ sq.changes }}</p>
     {% if past %}
         {% if sas %}
             <p>Guesses on this question:</p>
@@ -32,21 +33,23 @@
             <p>No guesses.</p>
         {% endif %}
     {% endif %}
-    {% if form and request.user|has_group:"Players"%}
-        <p>Guess the outcome:</p>
-        <form action="" method="post">
-            {% csrf_token %}
-            {{ form }}
-            <input type="submit" value="Submit">
-        </form>
-    {% elif form %}
-        {% if request.user.username == "guber" or request.user.username == "berta"%}
+    {% if changed < sq.changes %}
+        {% if form and request.user|has_group:"Players"%}
+            <p>Guess the outcome:</p>
             <form action="" method="post">
                 {% csrf_token %}
                 {{ form }}
-                <input type="submit" name="add_result" value="Register result">
+                <input type="submit" value="Submit">
             </form>
-{#            <a href="{% url 'evaluate' sq.id %}">evaluate</a>#}
+        {% elif form %}
+            {% if request.user.username == "guber" or request.user.username == "berta"%}
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input type="submit" name="add_result" value="Register result">
+                </form>
+    {#            <a href="{% url 'evaluate' sq.id %}">evaluate</a>#}
+            {% endif %}
         {% endif %}
     {% endif %}
 {% endblock %}

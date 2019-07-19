@@ -1,3 +1,4 @@
+from django.db import models
 from django.views.generic.edit import DeleteView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -191,7 +192,7 @@ def manage_sq(request):
                                                description=form.cleaned_data['description'],
                                                due=form.cleaned_data['due'],
                                                award=form.cleaned_data['award'],
-                                               changed=form.cleaned_data['changes'],
+                                               changes=form.cleaned_data['changes'],
                                                penalty=form.cleaned_data['penalty'],
                                                tournament=form.cleaned_data['tournament'])
             sq.save()
@@ -209,15 +210,21 @@ def sq(request, sq_id):
     context = {'sq': sq}
     if player_group(request.user) and sq.due > now:
         if StringAnswer.objects.filter(user=request.user, question=sq).exists():
+            sa = StringAnswer.objects.filter(user=request.user, question=sq).get()
             if request.method == 'POST':
                 form = SAForm(request.POST)
+                context['form'] = form
                 if form.is_valid():
-                    StringAnswer.objects.filter(user=request.user,
-                                                question=sq).update(answer=form.cleaned_data['answer'])
+                    if sa.answer != form.cleaned_data['answer']:
+                        StringAnswer.objects.filter(user=request.user,
+                                                    question=sq).update(answer=form.cleaned_data['answer'],
+                                                                        changed=models.F('changed')+1)
                     return HttpResponseRedirect('/guesses/')
             else:
-                sa = StringAnswer.objects.filter(user=request.user, question=sq).get()
-                form = SAForm(instance=sa)
+                context['changed'] = sa.changed
+                if sa.changed < sq.changes:
+                    form = SAForm(instance=sa)
+                    context['form'] = form
         else:
             if request.method == 'POST':
                 form = SAForm(request.POST)
@@ -226,8 +233,9 @@ def sq(request, sq_id):
                     sa.save()
                     return HttpResponseRedirect('/guesses/')
             else:
+                context['changed'] = 0
                 form = SAForm()
-        context['form'] = form
+            context['form'] = form
     elif sq.due < now:
         sas = StringAnswer.objects.filter(question=sq)
         context['sas'] = sas
@@ -256,4 +264,4 @@ def sq(request, sq_id):
             else:
                 form = SQ_update_form(instance=sq)
         context['form'] = form
-    return render(request, 'management/string.html', context)
+    return render(request, 'sq.html', context)
