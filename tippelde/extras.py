@@ -19,7 +19,15 @@ def ev(h_goals, a_goals, h_guess, a_guess):
     if h_goals - a_goals == h_guess - a_guess:
         if h_goals == h_guess:
             return 25
-        return 22 - 2 * abs(h_goals - h_guess)
+        points = 22 - 2 * abs(h_goals - h_guess)
+        if points < 0:
+            return 0
+        else:
+            return points
     else:
-        mistake = abs(h_goals-h_guess) + abs(a_goals-a_guess)
-        return 20 - 3 * mistake
+        mistake = abs(abs(h_goals-a_goals) - abs(h_guess-a_guess))
+        points = 20 - 3 * mistake
+        if points < 0:
+            return 0
+        else:
+            return points
