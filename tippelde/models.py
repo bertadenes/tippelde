@@ -174,8 +174,9 @@ class StringQuestion(Question):
             raise EvaluatedException("This question has already been evaluated.")
         answers = StringAnswer.objects.filter(question=self)
         for a in answers:
-            award = self.award - (a.changed * self.penalty)
-            Score.objects.filter(user=a.user, tournament=self.tournament).update(score=models.F('score')+award)
+            if a.answer == self.correct_answer:
+                award = self.award - (a.changed * self.penalty)
+                Score.objects.filter(user=a.user, tournament=self.tournament).update(score=models.F('score')+award)
         StringQuestion.objects.filter(id=self.id).update(evaluated=True)
         return
 
@@ -183,3 +184,6 @@ class StringQuestion(Question):
 class StringAnswer(Answer):
     question = models.ForeignKey(StringQuestion, on_delete=models.CASCADE)
     answer = models.CharField(max_length=200)
+
+    def __str__(self):
+        return "Answer to {1:s} by {0:s}".format(self.user.__str__(), self.question.__str__())

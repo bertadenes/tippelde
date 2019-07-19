@@ -216,7 +216,7 @@ def manage_sq(request):
     else:
         form = SQForm()
     context['form'] = form
-    return render(request, 'management/string.html', context)
+    return render(request, 'management/sq.html', context)
 
 
 @login_required

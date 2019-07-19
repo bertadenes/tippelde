@@ -14,11 +14,13 @@
             <tr>
                 <th>User</th>
                 <th>Answer</th>
+                <th>Changes made</th>
             </tr>
             {% for a in answers %}
                 <tr>
                     <td>{{ a.user.username }}</td>
                     <td>{{ a.answer }} </td>
+                    <td>{{ a.changed }} </td>
                 </tr>
             {% endfor %}
         </table>
