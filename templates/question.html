@@ -52,7 +52,11 @@
                 {{ form }}
                 <input type="submit" name="add_result" value="Register result">
             </form>
-            <a href="{% url 'evaluate_sq' q.id %}">evaluate</a>
+            {% if type == "string" %}
+                <a href="{% url 'evaluate_sq' q.id %}">evaluate</a>
+            {% elif type == "numeric" %}
+                <a href="{% url 'evaluate_nq' q.id %}">evaluate</a>
+            {% endif %}
         {% endif %}
     {% endif %}
 

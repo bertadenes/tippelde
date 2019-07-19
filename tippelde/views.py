@@ -258,6 +258,7 @@ def sq(request, q_id):
             else:
                 form = SQ_update_form(instance=q)
         context['form'] = form
+    context['type'] = "string"
     return render(request, 'question.html', context)
 
 
@@ -310,7 +311,7 @@ def nq(request, q_id):
                                                                    changed=form.cleaned_data['changes'],
                                                                    penalty=form.cleaned_data['penalty'],
                                                                    tournament=form.cleaned_data['tournament'])
-                    return HttpResponseRedirect('/management/sq/')
+                    return HttpResponseRedirect('/management/nq/')
             else:
                 form = SQForm(instance=q)
         else:
@@ -318,10 +319,11 @@ def nq(request, q_id):
                 form = SQ_update_form(request.POST)
                 if form.is_valid():
                     NumericQuestion.objects.filter(id=q_id).update(correct_answer=form.cleaned_data['correct_answer'])
-                    return HttpResponseRedirect('/management/sq/')
+                    return HttpResponseRedirect('/management/nq/')
             else:
                 form = SQ_update_form(instance=q)
         context['form'] = form
+    context['type'] = "numeric"
     return render(request, 'question.html', context)
 
 
@@ -373,8 +375,8 @@ def evaluate(request, game_id):
 
 @login_required
 @user_passes_test(is_manager)
-def evaluate_sq(request, sq_id):
-    q = StringQuestion.objects.get(id=sq_id)
+def evaluate_sq(request, q_id):
+    q = StringQuestion.objects.get(id=q_id)
     if q.correct_answer is None or q.evaluated:
         return HttpResponseRedirect('/management/sq/')
     answers = StringAnswer.objects.filter(question=q)

@@ -68,6 +68,22 @@
         {% endfor %}
     </table>
     {% endif %}
+    {% if nas %}
+            <table>
+        <tr>
+            <th>Question</th>
+            <th>Due</th>
+            <th>Your answer</th>
+        </tr>
+        {% for a in nas %}
+            <tr>
+                <td><a href="{% url 'nq' a.question.id %}">{{ a.question.name }}</a></td>
+                <td>{{ a.question.due }}</td>
+                <td>{{ a.answer }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
 {% endblock %}
 </body>
 </html>
