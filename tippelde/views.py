@@ -184,7 +184,7 @@ def manage_sq(request):
                                                penalty=form.cleaned_data['penalty'],
                                                tournament=form.cleaned_data['tournament'])
             sq.save()
-            return HttpResponseRedirect('/management/sq.html')
+            return HttpResponseRedirect('/management/sq')
     else:
         form = SQForm()
     context['form'] = form
@@ -245,4 +245,4 @@ def sq(request, sq_id):
             else:
                 form = SQ_update_form(instance=sq)
         context['form'] = form
-    return render(request, 'sq.html', context)
+    return render(request, 'management/string.html', context)
