@@ -49,7 +49,7 @@ class Evaluate(forms.Form):
 class SQForm(forms.ModelForm):
     class Meta:
         model = StringQuestion
-        fields = ('name', 'description', 'due', 'award', 'changed', 'penalty', 'tournament')
+        fields = ('name', 'description', 'due', 'award', 'changes', 'penalty', 'tournament')
 
 
 class SQ_update_form(forms.ModelForm):

@@ -59,7 +59,7 @@ class Question(models.Model):
     name = models.CharField(blank=True, null=True, max_length=200)
     description = models.TextField(blank=True, null=True, max_length=1000)
     award = models.PositiveSmallIntegerField(default=10)
-    changed = models.PositiveSmallIntegerField(default=0)
+    changes = models.PositiveSmallIntegerField(default=0)
     penalty = models.PositiveSmallIntegerField(default=3)
     tournament = models.ForeignKey(Tournament, null=True, on_delete=models.CASCADE)
     evaluated = models.BooleanField(default=False)
@@ -113,8 +113,8 @@ class Game(Question):
         for bet in bets:
             # obsolete with storing the actual score
             # if bet.value == self.result:
-            self.award = ev(self.home_goals, self.away_goals, bet.home_guess, bet.away_guess) * self.multiplier
-            Score.objects.filter(user=bet.user, tournament=self.tournament).update(score=models.F('score')+self.award)
+            award = ev(self.home_goals, self.away_goals, bet.home_guess, bet.away_guess) * self.multiplier
+            Score.objects.filter(user=bet.user, tournament=self.tournament).update(score=models.F('score')+award)
         Game.objects.filter(id=self.id).update(evaluated=True)
         return
 
@@ -131,6 +131,7 @@ class AnswerManager(models.Manager):
 class Answer(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     objects = AnswerManager()
+    changed = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
         abstract = True
@@ -164,6 +165,19 @@ class Bet(Answer):
 
 class StringQuestion(Question):
     correct_answer = models.CharField(blank=True, null=True, max_length=200)
+
+    def evaluate(self):
+        if self.tournament is None:
+            StringQuestion.objects.filter(id=self.id).update(evaluated=True)
+            return
+        if self.evaluated:
+            raise EvaluatedException("This question has already been evaluated.")
+        answers = StringAnswer.objects.filter(question=self)
+        for a in answers:
+            award = self.award - (a.changed * self.penalty)
+            Score.objects.filter(user=a.user, tournament=self.tournament).update(score=models.F('score')+award)
+        Game.objects.filter(id=self.id).update(evaluated=True)
+        return
 
 
 class StringAnswer(Answer):
