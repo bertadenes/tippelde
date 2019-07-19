@@ -13,7 +13,9 @@
         <p>{{ sq.description }}</p>
     {% endif %}
     <p>Closes at {{ sq.due }}</p>
-    <p>Changes {{ changed }}/{{ sq.changes }}</p>
+    {% if changed != -1 %}
+        <p>Changes {{ changed }}/{{ sq.changes }}</p>
+    {% endif %}
     {% if past %}
         {% if sas %}
             <p>Guesses on this question:</p>
@@ -41,17 +43,19 @@
                 {{ form }}
                 <input type="submit" value="Submit">
             </form>
-        {% elif form %}
-            {% if request.user.username == "guber" or request.user.username == "berta"%}
-                <form action="" method="post">
-                    {% csrf_token %}
-                    {{ form }}
-                    <input type="submit" name="add_result" value="Register result">
-                </form>
-    {#            <a href="{% url 'evaluate' sq.id %}">evaluate</a>#}
-            {% endif %}
         {% endif %}
     {% endif %}
+    {% if form %}
+        {% if request.user.username == "guber" or request.user.username == "berta"%}
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ form }}
+                <input type="submit" name="add_result" value="Register result">
+            </form>
+            <a href="{% url 'evaluate_sq' sq.id %}">evaluate</a>
+        {% endif %}
+    {% endif %}
+
 {% endblock %}
 </body>
 </html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Question evaluation</title>
+</head>
+<body>
+{% extends 'base.html' %}
+{% block content %}
+    <p>{{ q.name }}</p>
+    <p>Registered answer: {{ q.correct_answer }}</p>
+    {% if answers %}
+        <table>
+            <tr>
+                <th>User</th>
+                <th>Answer</th>
+            </tr>
+            {% for a in answers %}
+                <tr>
+                    <td>{{ a.user.username }}</td>
+                    <td>{{ a.answer }} </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Evaluate the answers and close the question.">
+        </form>
+    {% else %}
+        <p>No answers submitted.</p>
+    {% endif %}
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endblock %}
+</body>
+</html>

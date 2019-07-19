@@ -176,7 +176,7 @@ class StringQuestion(Question):
         for a in answers:
             award = self.award - (a.changed * self.penalty)
             Score.objects.filter(user=a.user, tournament=self.tournament).update(score=models.F('score')+award)
-        Game.objects.filter(id=self.id).update(evaluated=True)
+        StringQuestion.objects.filter(id=self.id).update(evaluated=True)
         return
 
 

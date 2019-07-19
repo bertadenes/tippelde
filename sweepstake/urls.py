@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^sq/(?P<sq_id>[0-9]+)/$', views.sq, name='sq'),
     url(r'^details/(?P<game_id>[0-9]+)/$', views.details, name='details'),
     url(r'^evaluate/(?P<game_id>[0-9]+)/$', views.evaluate, name='evaluate'),
+    url(r'^evaluate_sq/(?P<sq_id>[0-9]+)/$', views.evaluate_sq, name='evaluate_sq'),
     url(r'^game_delete/(?P<pk>\d+)/$', views.Game_delete.as_view(template_name='confirm_delete.html'),
         name='delete_game'),
 ]

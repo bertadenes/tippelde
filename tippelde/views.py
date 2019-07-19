@@ -182,6 +182,22 @@ def evaluate(request, game_id):
 
 @login_required
 @user_passes_test(is_manager)
+def evaluate_sq(request, sq_id):
+    q = StringQuestion.objects.get(id=sq_id)
+    if q.correct_answer is None or q.evaluated:
+        return HttpResponseRedirect('/management/sq/')
+    answers = StringAnswer.objects.filter(question=q)
+    context = {'q': q, 'answers': answers}
+    if request.method == 'POST':
+        q.evaluate()
+        messages.info(request, "Answers for this question have been evaluated.")
+        return HttpResponseRedirect('/management/sq/')
+    else:
+        return render(request, 'evaluate_question.html', context)
+
+
+@login_required
+@user_passes_test(is_manager)
 def manage_sq(request):
     sqs = StringQuestion.objects.order_by('due')
     context = {'sqs': sqs}
@@ -233,7 +249,7 @@ def sq(request, sq_id):
                     sa.save()
                     return HttpResponseRedirect('/guesses/')
             else:
-                context['changed'] = 0
+                context['changed'] = -1
                 form = SAForm()
             context['form'] = form
     elif sq.due < now:
