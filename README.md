@@ -66,4 +66,4 @@ jelölhetsz meg az idény alatt):
 
 Tipp kupasorozat:
 - Tippelők létszámától függően csoportkörös/egyenes kieséses sorozat, néhány NB I-es fordulónyi időszakonként lezárul
-egy-egy "játéknap", kiesnek/továbbjutnak tippelők~~~~~~~~
+egy-egy "játéknap", kiesnek/továbbjutnak tippelők

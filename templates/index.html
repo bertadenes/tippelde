@@ -8,16 +8,143 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <p>Szezon előtt:</p>
 
-    <p>Landing page</p>
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" name="try" value="try">
-    </form>
-    {% if score is not None %}
-        <p>Score: {{ score }}</p>
-    {%  endif %}
+<ul>
+<li><p>Módosítható (Módosítás után jellemzően kevesebb pont jár)</p>
+
+<ul>
+<li>Legtöbb játékperc (5 db, mindegyik módosítható egyszer)</li>
+
+<li>Felsőház sorrendje (pontos válaszért és a csapat nevéért is jár pont, 3x módosítható, <em>egyre kevesebb helyen)</em></li>
+
+<li>Gólkirály (bármikor, összesen 3x módosítható, fordulónként 3,5 ponttal kevesebbet ér)</li>
+
+<li>Gólok száma (télen)</li>
+
+<li>Sárga lapok száma (télen)</li>
+
+<li>Legtöbb sárga lapot kapó csapat <em>(ha a jelölted az első 3-ban van, télen módosítható)</em></li>
+
+<li>Magyar Kupa-győztes (télen)</li>
+
+<li>NB I kieső (télen)</li>
+
+<li>NB II feljutó (télen)</li>
+
+<li>Kanadai táblázat nyertese (pontok minden kanadai pont után)</li>
+
+<li><em>1 NB I-es csapat, amelyiknek minden bajnoki meccse után 2x annyi pontot kapsz, mint amennyit alapból kapnál</em></li></ul></li>
+
+<li><p>Nem módosítható</p>
+
+<p><ul>
+<li>10 gólt szerző játékos (2 db-ot kell jelölni)</li></p>
+
+<p><li>Piros lapok száma</li></p>
+
+<p><li>Tizenegyesek száma</li></p>
+
+<p><li>Tizenegyes belövési %</li></p>
+
+<p><li>Legtöbb őszi játékperc (ha a 3 legtöbb játékpercet játszó közül tippeltél)</li></p>
+
+<p><li>Legtöbb játékperc (ha az 5 legtöbbet játszó közül tippeltél)</li></p>
+
+<p><li>Legtöbb játékperc <strong>(ha az 5 db jelölt-megváltoztatott játékosod játékperceinek összege az 5 legtöbb között van)</strong></li></p>
+
+<p><li>InStat-átlag (az 5 db jelölt játékosod átlagainak összege)</li></p>
+
+<p><li>InStat őszi álomcsapat (ha a jelöltjeid közül valaki bekerül)</li></p>
+
+<p><li>InStat tavaszi álomcsapat (ha a jelöltjeid közül valaki bekerül)</li></p>
+
+<p><li>InStat szezon csapata (ha a jelöltjeid közül valaki bekerül)</li></p>
+
+<p><li>InStat ősz, tavasz, év játékosa (ha a jelöltjeid közül lesz valaki)</li></p>
+
+<p><li>Magyar Kupa-negyeddöntőben hány NB I-es lesz</li></p>
+
+<p><li>Első három edzőcsere (hármat jelölhetsz, sorrendben)</li></p>
+
+<p><li>Edzőcserék száma</li></p>
+
+<p><li>Bajnok</li></p>
+
+<p><li>Mesterhármasok száma</li></p>
+
+<p><li>Nemzetközi kupában legtovább álló magyar csapat</li></p>
+
+<p><li>2017-18-as idény eredményének fordított sorrendjében a játékosok választhatnak 3-3 játékost, akiért bónusz vagy
+büntetőpont jár gól/tizenegyes/gólpassz/sárga/kihagyott tizenegyes/játékperc után</li></ul>
+
+<p></p></li>
+</ul></p>
+
+<p>Szezon közben bármikor:</p>
+
+<ul>
+<li><strong>Válogatott meccsek</strong></li>
+
+<li>Magyar Kupában melyik megyei csapat jut legtovább</li>
+
+<li><strong>Magyar csapatok nemzetközi kupamérkőzései</strong></li>
+
+<li><strong>Magyar Kupa nagyobb rangadói</strong></li>
+
+<li><strong>Bármilyen egyéb esemény (BL/EL-csoportkörös magyar csapat továbbjutása, RangAdó gála díjazottjai, szezon során
+kialakuló dolgok)</strong></li>
+</ul>
+
+<p>Télen:</p>
+
+<ul>
+<li>Legtöbb tavaszi játékperc</li>
+
+<li>Téli edzőcsere (melyik csapatnál)</li>
+
+<li>Melyik csapatban lesz a legtöbb új igazolás az első téli fordulóban</li>
+</ul>
+
+<p>Folyamatos, eredményfüggő pontok:</p>
+
+<ul>
+<li>Telitalálatos NB I forduló</li>
+
+<li><em>A szezon során 3 mérkőzés megjelölhető, az érte kapott pontok 4x annyit érnek</em></li>
+
+<li>InStat forduló csapata</li>
+
+<li>NB I-es fordulóban legtöbb pontot szerző tippelő</li>
+
+<li>Adott időszak alatt legtöbb pontot szerző tippelő</li>
+
+<li>Ősszel legtöbb pontot szerző tippelő</li>
+
+<li>Tavasszal legtöbb pontot szerző tippelő</li>
+
+<li>Szezon során legtöbb pontot szerző tippelő</li>
+</ul>
+
+<p>Survivor játék (minden fordulóban megjelölsz egy csapatot, amelyik szerinted nyerni fog, minden csapatot háromszor
+jelölhetsz meg az idény alatt):</p>
+
+<ul>
+<li>Bónuszpont 10 tippelőnek, aki a legkésőbb hibázik 6-ot</li>
+
+<li>Bónuszpont 10 tippelőnek, aki a legtöbb találatot éri el a szezon során</li>
+
+<li>Pont jár minden találatért (6 hiba után is)</li>
+
+<li>Amíg nem hibázol 6-ot, minden körben bónuszpont jár a helyes találatok után</li>
+</ul>
+
+<p>Tipp kupasorozat:</p>
+
+<ul>
+<li>Tippelők létszámától függően csoportkörös/egyenes kieséses sorozat, néhány NB I-es fordulónyi időszakonként lezárul
+egy-egy "játéknap", kiesnek/továbbjutnak tippelők</li>
+</ul>
 {% endblock %}
 </body>
 </html>
