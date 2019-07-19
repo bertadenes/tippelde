@@ -21,11 +21,11 @@ class Game_delete(DeleteView):
 class Bet_delete(DeleteView):
     model = Bet
     success_url = reverse_lazy('guesses')
-
-
-class SADel(DeleteView):
-    model = StringAnswer
-    success_url = reverse_lazy('guesses')
+#
+# removed to avoid multiple changes
+# class SADel(DeleteView):
+#     model = StringAnswer
+#     success_url = reverse_lazy('guesses')
 
 
 class SQDel(DeleteView):

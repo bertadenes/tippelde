@@ -58,14 +58,12 @@
             <th>Question</th>
             <th>Due</th>
             <th>Your answer</th>
-            <th>Delete</th>
         </tr>
         {% for a in sas %}
             <tr>
                 <td><a href="{% url 'sq' a.question.id %}">{{ a.question.name }}</a></td>
                 <td>{{ a.question.due }}</td>
                 <td>{{ a.answer }}</td>
-                <td><a href="{% url 'delete_sa' a.id %}">delete</a></td>
             </tr>
         {% endfor %}
     </table>
