@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from tippelde.exceptions import EvaluatedException
+from tippelde.exceptions import EvaluatedException, CannotMultiply
 from tippelde.extras import ev
 
 
@@ -29,6 +29,7 @@ class Tournament(models.Model):
 
 class Score(models.Model):
     score = models.SmallIntegerField(default=0)
+    mult4left = models.SmallIntegerField(default=3)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     # objects = Score_Manager
@@ -39,17 +40,23 @@ class Score(models.Model):
 
 # Game-Bet is the first pair of objects
 class Game_Manager(models.Manager):
-    def create_Game(self, home, away, kickoff, due):
-        game = self.create(home_team=home, away_team=away, kickoff=kickoff, due=due)
+    def create_Game(self, home, away, kickoff, due, tour, mult):
+        game = self.create(home_team=home, away_team=away, kickoff=kickoff, due=due, tournament=tour, multiplier=mult)
         return game
 
 
 class Bookmaker(models.Manager):
-    def create_Bet(self, user, game, home_guess, away_guess):
-        bet = self.create(user=user, game=game, home_guess=home_guess, away_guess=away_guess)
+    def create_Bet(self, user, game, home_guess, away_guess, mult4):
+        bet = self.create(user=user, game=game, home_guess=home_guess, away_guess=away_guess, mult4=mult4)
         if not Score.objects.filter(user=user, tournament=game.tournament).exists():
             score = Score.objects.create(user=user, tournament=game.tournament)
             score.save()
+        else:
+            score = Score.objects.get(user=user, tournament=game.tournament)
+        if mult4 and score.mult4left == 0:
+            raise CannotMultiply("You have no tokens left.")
+        elif mult4:
+            Score.objects.filter(user=user, tournament=game.tournament).update(mult4left=models.F('mult4left')-1)
         return bet
 
 
@@ -114,6 +121,8 @@ class Game(Question):
             # obsolete with storing the actual score
             # if bet.value == self.result:
             award = ev(self.home_goals, self.away_goals, bet.home_guess, bet.away_guess) * self.multiplier
+            if bet.mult4:
+                award = award * 4
             Score.objects.filter(user=bet.user, tournament=self.tournament).update(score=models.F('score')+award)
         Game.objects.filter(id=self.id).update(evaluated=True)
         return
@@ -144,6 +153,7 @@ class Bet(Answer):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     home_guess = models.SmallIntegerField()
     away_guess = models.SmallIntegerField()
+    mult4 = models.BooleanField(default=False)
     # obsolete with storing the actual score
     # outcomes = [(0, "Draw"), (1, "Home"), (2, "Away")]
     # value = models.SmallIntegerField(default=0, choices=outcomes, verbose_name='outcome')

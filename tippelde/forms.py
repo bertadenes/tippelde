@@ -8,7 +8,7 @@ from tippelde.models import Bet, Game, Tournament, StringQuestion, StringAnswer,
 class Bet_form(forms.ModelForm):
     class Meta:
         model = Bet
-        fields = ('home_guess', 'away_guess')
+        fields = ('home_guess', 'away_guess', 'mult4', )
 
 
 class Game_form(forms.ModelForm):

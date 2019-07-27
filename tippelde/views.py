@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 from tippelde.models import Game, Bet, Tournament, Score, StringQuestion, StringAnswer, NumericQuestion, NumericAnswer
 from tippelde.forms import Bet_form, Game_form, Game_update_form, Tournament_form, Evaluate, SQForm, SAForm, \
     SQ_update_form, NQForm, NAForm
@@ -83,7 +84,8 @@ def manage_games(request):
         form = Game_form(request.POST)
         if form.is_valid():
             game = Game.objects.create_Game(home=form.cleaned_data['home_team'], away=form.cleaned_data['away_team'],
-                                            kickoff=form.cleaned_data['due'], due=form.cleaned_data['due'])
+                                            kickoff=form.cleaned_data['due'], due=form.cleaned_data['due'],
+                                            tour=form.cleaned_data['tournament'], mult=form.cleaned_data['multiplier'])
             game.save()
             return HttpResponseRedirect('management/games.html')
     else:
@@ -146,6 +148,12 @@ def details(request, game_id):
     now = timezone.now()
     game = Game.objects.get(id=game_id)
     context = {'game': game}
+    try:
+        score = Score.objects.get(user=request.user, tournament=game.tournament)
+        context['mult4left'] = score.mult4left
+    except ObjectDoesNotExist:
+        context['mult4left'] = 3
+
     if player_group(request.user) and game.kickoff > now:
         if Bet.objects.filter(user=request.user, game=game).exists():
             if request.method == 'POST':
@@ -163,7 +171,8 @@ def details(request, game_id):
                 if form.is_valid():
                     bet = Bet.objects.create_Bet(game=game, user=request.user,
                                                  home_guess=form.cleaned_data['home_guess'],
-                                                 away_guess=form.cleaned_data['away_guess'])
+                                                 away_guess=form.cleaned_data['away_guess'],
+                                                 mult4=form.cleaned_data['mult4'])
                     bet.save()
                     return HttpResponseRedirect('/guesses/')
             else:

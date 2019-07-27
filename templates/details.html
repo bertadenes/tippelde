@@ -34,6 +34,7 @@
     {% endif %}
     {% if form and request.user|has_group:"Players"%}
         <p>Guess the outcome:</p>
+        <p>You have {{ mult4left }} 4x tokens left. <b>Can only be used in a new guess and cannot be withdrawn</b></p>
         <form action="" method="post">
             {% csrf_token %}
             {{ form }}
