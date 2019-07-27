@@ -25,43 +25,58 @@
     {% else %}
         <p>No round available.</p>
     {% endif %}
-    {% if upcoming %}
-    <table>
+    {% if past_rounds %}
+        <h3>Previous matchdays and guesses</h3>
+        <table>
         <tr>
             <th>Matchday</th>
-            <th>Game</th>
-            <th>Kickoff</th>
+            <th>Guess</th>
         </tr>
-        {% for g in upcoming %}
+        {% for r in past_rounds %}
             <tr>
-                <td>{{ g.matchday }}</td>
-                <td><a href="{% url 'details' g.id %}">{{ g }}</a></td>
-                <td>{{ g.kickoff }}</td>
+                <td><a href="{% url 'round' r.id %}">{{ r.question.matchday }}</a></td>
+                <td>{{ r.answer }}</td>
             </tr>
         {% endfor %}
     </table>
-    {% else %}
-        <p>No game available.</p>
     {% endif %}
-    <h3>Results</h3>
-    {% if results %}
-        <table>
-            <tr>
-                <th>Matchday</th>
-                <th>Game</th>
-                <th>Kickoff</th>
-            </tr>
-            {% for g in results %}
-                <tr>
-                    <td>{{ g.matchday }}</td>
-                    <td><a href="{% url 'details' g.id %}">{{ g }}</a></td>
-                    <td>{{ g.kickoff }}</td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <p>No game available.</p>
-    {% endif %}
+{#    {% if upcoming %}#}
+{#    <table>#}
+{#        <tr>#}
+{#            <th>Matchday</th>#}
+{#            <th>Game</th>#}
+{#            <th>Kickoff</th>#}
+{#        </tr>#}
+{#        {% for g in upcoming %}#}
+{#            <tr>#}
+{#                <td>{{ g.matchday }}</td>#}
+{#                <td><a href="{% url 'details' g.id %}">{{ g }}</a></td>#}
+{#                <td>{{ g.kickoff }}</td>#}
+{#            </tr>#}
+{#        {% endfor %}#}
+{#    </table>#}
+{#    {% else %}#}
+{#        <p>No game available.</p>#}
+{#    {% endif %}#}
+{#    <h3>Results</h3>#}
+{#    {% if results %}#}
+{#        <table>#}
+{#            <tr>#}
+{#                <th>Matchday</th>#}
+{#                <th>Game</th>#}
+{#                <th>Kickoff</th>#}
+{#            </tr>#}
+{#            {% for g in results %}#}
+{#                <tr>#}
+{#                    <td>{{ g.matchday }}</td>#}
+{#                    <td><a href="{% url 'details' g.id %}">{{ g }}</a></td>#}
+{#                    <td>{{ g.kickoff }}</td>#}
+{#                </tr>#}
+{#            {% endfor %}#}
+{#        </table>#}
+{#    {% else %}#}
+{#        <p>No game available.</p>#}
+{#    {% endif %}#}
 {% endblock %}
 </body>
 </html>

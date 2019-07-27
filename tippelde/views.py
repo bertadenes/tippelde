@@ -59,11 +59,13 @@ def guesses(request):
 def survivor(request):
     context = {}
     now = timezone.now()
-    upcoming = Game.objects.filter(kickoff__gte=now, matchday__isnull=False).order_by('matchday')
-    context['upcoming'] = upcoming
-    open_rounds = SurvivorRound.objects.filter(due__gte=now).order_by('matchday')
+    # upcoming = Game.objects.filter(kickoff__gte=now, matchday__isnull=False).order_by('matchday')
+    # context['upcoming'] = upcoming
+    open_rounds = SurvivorRound.objects.filter(due__gte=now).order_by('-matchday')
     context['open_rounds'] = open_rounds
-
+    past_rounds = SurvivorGuess.objects.filter(user=request.user,
+                                               question__due__lt=now).order_by('-question__matchday')
+    context['past_rounds'] = past_rounds
     return render(request, 'survivor.html', context)
 
 
@@ -306,9 +308,17 @@ def survivor_round(request, round_id):
                 form = SurvivorGuessForm(request.POST)
                 context['form'] = form
                 if form.is_valid():
-                    if a.answer != form.cleaned_data['answer']:
+                    if a.answer == form.cleaned_data['answer']:
                         SurvivorGuess.objects.filter(user=request.user,
                                                      question=q).update(answer=form.cleaned_data['answer'])
+                    elif SurvivorGuess.objects.filter(user=request.user,
+                                                      answer=form.cleaned_data['answer']).count() < 3:
+                        SurvivorGuess.objects.filter(user=request.user,
+                                                     question=q).update(answer=form.cleaned_data['answer'])
+                    else:
+                        messages.info(request,
+                                      "You have already chosen {0:s} 3 times\nChoose another team".
+                                      format(form.cleaned_data['answer']))
                     return HttpResponseRedirect('/survivor/')
             else:
                 form = SurvivorGuessForm(instance=a)
@@ -317,8 +327,13 @@ def survivor_round(request, round_id):
             if request.method == 'POST':
                 form = SurvivorGuessForm(request.POST)
                 if form.is_valid():
-                    a = SurvivorGuess.objects.create_answer(request.user, q, form.cleaned_data['answer'])
-                    a.save()
+                    if SurvivorGuess.objects.filter(user=request.user, answer=form.cleaned_data['answer']).count() < 3:
+                        a = SurvivorGuess.objects.create_answer(request.user, q, form.cleaned_data['answer'])
+                        a.save()
+                    else:
+                        messages.info(request,
+                                      "You have already chosen {0:s} 3 times\nChoose another team".
+                                      format(form.cleaned_data['answer']))
                     return HttpResponseRedirect('/survivor/')
             else:
                 form = SurvivorGuessForm()
