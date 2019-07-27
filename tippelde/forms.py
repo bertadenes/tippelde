@@ -4,6 +4,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from tippelde.models import Bet, Game, Tournament, StringQuestion, StringAnswer, SurvivorRound, SurvivorGuess
 # from tippelde.models import NumericQuestion, NumericAnswer
+from tippelde.widgets import ListTextWidget
 
 
 class Bet_form(forms.ModelForm):
@@ -16,6 +17,29 @@ class Game_form(forms.ModelForm):
     class Meta:
         model = Game
         fields = ('home_team', 'away_team', 'due', 'tournament', 'multiplier', 'matchday')
+
+    def __init__(self, *args, **kwargs):
+        teams = (
+                'Budapest Honvéd FC',
+                'Debreceni VSC',
+                'Diósgyőri VTK',
+                'Ferencvárosi TC',
+                'Kaposvári Rákóczi FC',
+                'Kisvárda Master Good',
+                'Mezőkövesd Zsóry FC',
+                'MOL Fehérvár FC',
+                'Paksi FC',
+                'Puskás Akadémia FC',
+                'Újpest FC',
+                'Zalaegerszegi TE)'
+                )
+        super(Game_form, self).__init__(*args, **kwargs)
+
+        # the "name" parameter will allow you to use the same widget more than once in the same
+        # form, not setting this parameter differently will cuse all inputs display the
+        # same list.
+        self.fields['home_team'].widget = ListTextWidget(data_list=teams, name="Home Team")
+        self.fields['away_team'].widget = ListTextWidget(data_list=teams, name="Away Team")
 
     def clean_kickoff(self):
         now = timezone.now()
@@ -88,6 +112,24 @@ class SurvivorGuessForm(forms.ModelForm):
     class Meta:
         model = SurvivorGuess
         fields = ('answer', )
+        TEAMS = (
+            ('', 'Select'),
+            ('Budapest Honvéd FC', 'Budapest Honvéd FC'),
+            ('Debreceni VSC', 'Debreceni VSC'),
+            ('Diósgyőri VTK', 'Diósgyőri VTK'),
+            ('Ferencvárosi TC', 'Ferencvárosi TC'),
+            ('Kaposvári Rákóczi FC', 'Kaposvári Rákóczi FC'),
+            ('Kisvárda Master Good', 'Kisvárda Master Good'),
+            ('Mezőkövesd Zsóry FC', 'Mezőkövesd Zsóry FC'),
+            ('MOL Fehérvár FC', 'MOL Fehérvár FC'),
+            ('Paksi FC', 'Paksi FC'),
+            ('Puskás Akadémia FC', 'Puskás Akadémia FC'),
+            ('Újpest FC', 'Újpest FC'),
+            ('Zalaegerszegi TE', 'Zalaegerszegi TE')
+        )
+        widgets = {
+            'answer': forms.Select(choices=TEAMS, attrs={'class': 'form-control'}),
+        }
 
 
 # class NQForm(forms.ModelForm):
