@@ -97,7 +97,8 @@ def manage_games(request):
         if form.is_valid():
             game = Game.objects.create_Game(home=form.cleaned_data['home_team'], away=form.cleaned_data['away_team'],
                                             kickoff=form.cleaned_data['due'], due=form.cleaned_data['due'],
-                                            tour=form.cleaned_data['tournament'], mult=form.cleaned_data['multiplier'])
+                                            tour=form.cleaned_data['tournament'], mult=form.cleaned_data['multiplier'],
+                                            md=form.cleaned_data['matchday'])
             game.save()
             return HttpResponseRedirect('management/games.html')
     else:

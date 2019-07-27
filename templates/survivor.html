@@ -42,35 +42,6 @@
     {% else %}
         <p>No game available.</p>
     {% endif %}
-    <h3>Open questions</h3>
-    {% if sqs %}
-            <table>
-        <tr>
-            <th>Question</th>
-            <th>Due</th>
-        </tr>
-        {% for q in sqs %}
-            <tr>
-                <td><a href="{% url 'sq' q.id %}">{{ q.name }}</a></td>
-                <td>{{ q.due }}</td>
-            </tr>
-        {% endfor %}
-    </table>
-    {% endif %}
-    {% if nqs %}
-            <table>
-        <tr>
-            <th>Question</th>
-            <th>Due</th>
-        </tr>
-        {% for q in nqs %}
-            <tr>
-                <td><a href="{% url 'nq' q.id %}">{{ q.name }}</a></td>
-                <td>{{ q.due }}</td>
-            </tr>
-        {% endfor %}
-    </table>
-    {% endif %}
 {% endblock %}
 </body>
 </html>
