@@ -30,6 +30,8 @@ class Tournament(models.Model):
 class Score(models.Model):
     score = models.SmallIntegerField(default=0)
     mult4left = models.SmallIntegerField(default=3)
+    survivor_fails = models.SmallIntegerField(default=0)
+    survivor_died = models.SmallIntegerField(default=-1)
     double_team = models.CharField(max_length=200, blank=True, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
