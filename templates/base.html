@@ -14,6 +14,7 @@
                 {% if request.user|has_group:"Players" %}
                     <th><a href="{% url 'games' %}">Games</a></th>
                     <th><a href="{% url 'guesses' %}">Guesses</a></th>
+                    <th><a href="{% url 'survivor' %}">Survivor</a></th>
                 {% endif %}
                 <th><a href="{% url 'tables' %}">Tables</a></th>
                 {% if request.user.username == "guber" or request.user.username == "berta"%}
@@ -27,6 +28,13 @@
         </tr>
     </table>
 {% endblock menu %}
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 {% block content %}{% endblock content %}
 </body>
 </html>

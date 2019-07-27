@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Survivor</title>
+</head>
+<html lang="en">
+<body>
+{% extends 'base.html' %}
+
+{% block content %}
+    <h3>Upcoming</h3>
+    {% if upcoming %}
+    <table>
+        <tr>
+            <th>Game</th>
+            <th>Kickoff</th>
+        </tr>
+        {% for g in upcoming %}
+            <tr>
+                <td><a href="{% url 'details' g.id %}">{{ g }}</a></td>
+                <td>{{ g.kickoff }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>No game available.</p>
+    {% endif %}
+    <h3>Results</h3>
+    {% if results %}
+        <table>
+            <tr>
+                <th>Game</th>
+                <th>Kickoff</th>
+            </tr>
+            {% for g in results %}
+                <tr>
+                    <td><a href="{% url 'details' g.id %}">{{ g }}</a></td>
+                    <td>{{ g.kickoff }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No game available.</p>
+    {% endif %}
+    <h3>Open questions</h3>
+    {% if sqs %}
+            <table>
+        <tr>
+            <th>Question</th>
+            <th>Due</th>
+        </tr>
+        {% for q in sqs %}
+            <tr>
+                <td><a href="{% url 'sq' q.id %}">{{ q.name }}</a></td>
+                <td>{{ q.due }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+    {% if nqs %}
+            <table>
+        <tr>
+            <th>Question</th>
+            <th>Due</th>
+        </tr>
+        {% for q in nqs %}
+            <tr>
+                <td><a href="{% url 'nq' q.id %}">{{ q.name }}</a></td>
+                <td>{{ q.due }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+{% endblock %}
+</body>
+</html>

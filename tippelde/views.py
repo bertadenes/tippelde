@@ -55,7 +55,11 @@ def guesses(request):
 @login_required
 @user_passes_test(player_group)
 def survivor(request):
-    return
+    context = {}
+    now = timezone.now()
+    upcoming = Game.objects.filter(kickoff__gte=now, matchday__isnull=False).order_by('matchday')
+    context['upcoming'] = upcoming
+    return render(request, 'survivor.html', context)
 
 
 @login_required
@@ -184,6 +188,7 @@ def details(request, game_id):
                                                      mult4=form.cleaned_data['mult4'])
                         bet.save()
                     except CannotMultiply:
+                        messages.info(request, "Your guess is not saved, because you are out of tokens.")
                         return HttpResponseRedirect('/games/')
                     return HttpResponseRedirect('/guesses/')
             else:
