@@ -64,13 +64,13 @@ class SAForm(forms.ModelForm):
         fields = ('answer', )
 
 
-class SurvivorRoundFrom(forms.ModelForm):
+class SurvivorRoundForm(forms.ModelForm):
     class Meta:
         model = SurvivorRound
         fields = ('matchday', )
 
 
-class SurvivorGuessFrom(forms.ModelForm):
+class SurvivorGuessForm(forms.ModelForm):
     class Meta:
         model = SurvivorGuess
         fields = ('answer', )

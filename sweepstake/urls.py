@@ -36,6 +36,7 @@ urlpatterns = [
     # detailed views
     url(r'^details/(?P<game_id>[0-9]+)/$', views.details, name='details'),
     url(r'^sq/(?P<q_id>[0-9]+)/$', views.sq, name='sq'),
+    url(r'^round/(?P<round_id>[0-9]+)/$', views.survivor_round, name='round'),
     # url(r'^nq/(?P<q_id>[0-9]+)/$', views.nq, name='nq'),
     # deletion routes
     url(r'^game_delete/(?P<pk>\d+)/$', views.Game_delete.as_view(template_name='confirm_delete.html'),

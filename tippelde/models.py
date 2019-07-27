@@ -212,8 +212,11 @@ class SurvivorRound(Question):
 
 
 class SurvivorGuess(Answer):
-    round = models.ForeignKey(StringQuestion, on_delete=models.CASCADE)
+    question = models.ForeignKey(SurvivorRound, on_delete=models.CASCADE)
     answer = models.CharField(max_length=200)
+
+    def __str__(self):
+        return "{0:s} in round {1:d} by {2:s}".format(self.answer, self.question.matchday, self.user.__str__())
 
 
 # class NumericQuestion(Question):

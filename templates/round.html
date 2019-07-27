@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Survivor Round</title>
+</head>
+<body>
+{% extends 'base.html' %}
+{% load custom_tags %}
+{% block content %}
+    <p>Matchday {{ SR.matchday }}</p>
+    {% if games %}
+    <table>
+        <tr>
+            <th>Matchday</th>
+            <th>Game</th>
+            <th>Kickoff</th>
+        </tr>
+        {% for g in games %}
+            <tr>
+                <td>{{ g.matchday }}</td>
+                <td><a href="{% url 'details' g.id %}">{{ g }}</a></td>
+                <td>{{ g.kickoff }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>No game available.</p>
+    {% endif %}
+    {% if past %}
+    {% endif %}
+    {% if form and request.user|has_group:"Players"%}
+        <p>Which team is going to win this matchday?</p>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="Submit">
+        </form>
+    {% endif %}
+{% endblock %}
+</body>
+</html>

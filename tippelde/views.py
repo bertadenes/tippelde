@@ -9,10 +9,10 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 
 from tippelde.exceptions import CannotMultiply
-from tippelde.models import Game, Bet, Tournament, Score, StringQuestion, StringAnswer
+from tippelde.models import Game, Bet, Tournament, Score, StringQuestion, StringAnswer, SurvivorRound, SurvivorGuess
 # from tippelde.models import NumericQuestion, NumericAnswer
 from tippelde.forms import Bet_form, Game_form, Game_update_form, Tournament_form, Evaluate, SQForm, SAForm, \
-    SQ_update_form
+    SQ_update_form, SurvivorGuessForm
 # from tippelde.forms import NQForm, NAForm
 from tippelde.extras import player_group, is_manager, ev
 
@@ -61,6 +61,9 @@ def survivor(request):
     now = timezone.now()
     upcoming = Game.objects.filter(kickoff__gte=now, matchday__isnull=False).order_by('matchday')
     context['upcoming'] = upcoming
+    open_rounds = SurvivorRound.objects.filter(due__gte=now).order_by('matchday')
+    context['open_rounds'] = open_rounds
+
     return render(request, 'survivor.html', context)
 
 
@@ -288,6 +291,43 @@ def sq(request, q_id):
         context['form'] = form
     context['type'] = "string"
     return render(request, 'question.html', context)
+
+
+@login_required
+def survivor_round(request, round_id):
+    now = timezone.now()
+    q = SurvivorRound.objects.get(id=round_id)
+    games = Game.objects.filter(matchday=q.matchday)
+    context = {'SR': q, 'games': games}
+    if player_group(request.user) and q.due > now:
+        if SurvivorGuess.objects.filter(user=request.user, question=q).exists():
+            a = SurvivorGuess.objects.filter(user=request.user, question=q).get()
+            if request.method == 'POST':
+                form = SurvivorGuessForm(request.POST)
+                context['form'] = form
+                if form.is_valid():
+                    if a.answer != form.cleaned_data['answer']:
+                        SurvivorGuess.objects.filter(user=request.user,
+                                                     question=q).update(answer=form.cleaned_data['answer'])
+                    return HttpResponseRedirect('/survivor/')
+            else:
+                form = SurvivorGuessForm(instance=a)
+                context['form'] = form
+        else:
+            if request.method == 'POST':
+                form = SurvivorGuessForm(request.POST)
+                if form.is_valid():
+                    a = SurvivorGuess.objects.create_answer(request.user, q, form.cleaned_data['answer'])
+                    a.save()
+                    return HttpResponseRedirect('/survivor/')
+            else:
+                form = SurvivorGuessForm()
+            context['form'] = form
+    elif q.due < now:
+        ans = SurvivorGuess.objects.filter(question=q)
+        context['ans'] = ans
+        context['past'] = True
+    return render(request, 'round.html', context)
 
 
 # @login_required

@@ -9,6 +9,22 @@
 
 {% block content %}
     <h3>Upcoming</h3>
+    {% if open_rounds %}
+    <table>
+        <tr>
+            <th>Matchday</th>
+            <th>Due</th>
+        </tr>
+        {% for r in open_rounds %}
+            <tr>
+                <td><a href="{% url 'round' r.id %}">{{ r.matchday }}</a></td>
+                <td>{{ r.due }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>No round available.</p>
+    {% endif %}
     {% if upcoming %}
     <table>
         <tr>
