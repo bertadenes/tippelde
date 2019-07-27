@@ -2,7 +2,7 @@ import datetime
 from django.utils import timezone
 from django import forms
 from django.core.exceptions import ValidationError
-from tippelde.models import Bet, Game, Tournament, StringQuestion, StringAnswer
+from tippelde.models import Bet, Game, Tournament, StringQuestion, StringAnswer, SurvivorRound, SurvivorGuess
 # from tippelde.models import NumericQuestion, NumericAnswer
 
 
@@ -37,7 +37,6 @@ class Game_update_form(forms.ModelForm):
 
 class Tournament_form(forms.Form):
     name = forms.ChoiceField(choices=[(t.name, t.name) for t in Tournament.objects.all()])
-    # name = forms.TextInput()
 
 
 class Evaluate(forms.Form):
@@ -62,6 +61,18 @@ class SQ_update_form(forms.ModelForm):
 class SAForm(forms.ModelForm):
     class Meta:
         model = StringAnswer
+        fields = ('answer', )
+
+
+class SurvivorRoundFrom(forms.ModelForm):
+    class Meta:
+        model = SurvivorRound
+        fields = ('matchday', )
+
+
+class SurvivorGuessFrom(forms.ModelForm):
+    class Meta:
+        model = SurvivorGuess
         fields = ('answer', )
 
 

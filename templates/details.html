@@ -41,7 +41,7 @@
             <input type="submit" value="Submit">
         </form>
     {% elif form and game.evaluated == "False"%}
-        {% if request.user.username == "guber" or request.user.username == "berta"%}
+        {% if request.user|has_group:"managers" %}
             <form action="" method="post">
                 {% csrf_token %}
                 {{ form }}

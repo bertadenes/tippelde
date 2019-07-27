@@ -5,10 +5,9 @@ def player_group(user):
 
 
 def is_manager(user):
-    if user.username == "guber" or user.username == "berta":
-        return True
-    else:
-        return False
+    if user:
+        return user.groups.filter(name='managers').exists()
+    return False
 
 
 def ev(h_goals, a_goals, h_guess, a_guess):

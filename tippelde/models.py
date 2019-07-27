@@ -207,6 +207,15 @@ class StringAnswer(Answer):
         return "Answer to {1:s} by {0:s}".format(self.user.__str__(), self.question.__str__())
 
 
+class SurvivorRound(Question):
+    matchday = models.PositiveSmallIntegerField(unique=True)
+
+
+class SurvivorGuess(Answer):
+    round = models.ForeignKey(StringQuestion, on_delete=models.CASCADE)
+    answer = models.CharField(max_length=200)
+
+
 # class NumericQuestion(Question):
 #     correct_answer = models.PositiveSmallIntegerField(blank=True, null=True)
 #
