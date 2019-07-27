@@ -14,7 +14,7 @@ class Bet_form(forms.ModelForm):
 class Game_form(forms.ModelForm):
     class Meta:
         model = Game
-        fields = ('home_team', 'away_team', 'due', 'tournament', 'multiplier')
+        fields = ('home_team', 'away_team', 'due', 'tournament', 'multiplier', 'matchday')
 
     def clean_kickoff(self):
         now = timezone.now()

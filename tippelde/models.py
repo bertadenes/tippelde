@@ -41,8 +41,9 @@ class Score(models.Model):
 
 # Game-Bet is the first pair of objects
 class Game_Manager(models.Manager):
-    def create_Game(self, home, away, kickoff, due, tour, mult):
-        game = self.create(home_team=home, away_team=away, kickoff=kickoff, due=due, tournament=tour, multiplier=mult)
+    def create_Game(self, home, away, kickoff, due, tour, mult, md):
+        game = self.create(home_team=home, away_team=away, kickoff=kickoff, due=due, tournament=tour, multiplier=mult,
+                           matchday=md)
         return game
 
 
@@ -90,6 +91,7 @@ class Game(Question):
     away_goals = models.SmallIntegerField(blank=True, null=True)
     objects = Game_Manager()
     multiplier = models.SmallIntegerField(default=1)
+    matchday = models.SmallIntegerField(blank=True, null=True)
 
     def __str__(self):
         return "{0:s}-{1:s}".format(self.home_team, self.away_team)
