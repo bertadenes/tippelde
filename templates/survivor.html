@@ -34,7 +34,7 @@
         </tr>
         {% for r in past_rounds %}
             <tr>
-                <td><a href="{% url 'round' r.id %}">{{ r.question.matchday }}</a></td>
+                <td><a href="{% url 'round' r.question_id %}">{{ r.question.matchday }}</a></td>
                 <td>{{ r.answer }}</td>
             </tr>
         {% endfor %}
