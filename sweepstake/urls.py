@@ -32,23 +32,23 @@ urlpatterns = [
     url(r'^management/home/', views.manage, name='management'),
     url(r'^management/games/', views.manage_games, name='manage_games'),
     url(r'^management/sq/', views.manage_sq, name='manage_sq'),
-    url(r'^management/nq/', views.manage_nq, name='manage_nq'),
+    # url(r'^management/nq/', views.manage_nq, name='manage_nq'),
     # detailed views
     url(r'^details/(?P<game_id>[0-9]+)/$', views.details, name='details'),
     url(r'^sq/(?P<q_id>[0-9]+)/$', views.sq, name='sq'),
-    url(r'^nq/(?P<q_id>[0-9]+)/$', views.nq, name='nq'),
+    # url(r'^nq/(?P<q_id>[0-9]+)/$', views.nq, name='nq'),
     # deletion routes
     url(r'^game_delete/(?P<pk>\d+)/$', views.Game_delete.as_view(template_name='confirm_delete.html'),
         name='delete_game'),
     url(r'^guess_delete/(?P<pk>\d+)/$', views.Bet_delete.as_view(template_name='confirm_delete.html'),
         name='delete_guess'),
     url(r'^sq_delete/(?P<pk>\d+)/$', views.SQDel.as_view(template_name='confirm_delete.html'), name='delete_sq'),
-    url(r'^nq_delete/(?P<pk>\d+)/$', views.NQDel.as_view(template_name='confirm_delete.html'), name='delete_nq'),
+    # url(r'^nq_delete/(?P<pk>\d+)/$', views.NQDel.as_view(template_name='confirm_delete.html'), name='delete_nq'),
     # url(r'^sa_delete/(?P<pk>\d+)/$', views.SADel.as_view(template_name='confirm_delete.html'), name='delete_sa'),
     # evaluation routes
     url(r'^evaluate/(?P<game_id>[0-9]+)/$', views.evaluate, name='evaluate'),
     url(r'^evaluate_sq/(?P<q_id>[0-9]+)/$', views.evaluate_sq, name='evaluate_sq'),
-    url(r'^evaluate_nq/(?P<q_id>[0-9]+)/$', views.evaluate_nq, name='evaluate_nq'),
+    # url(r'^evaluate_nq/(?P<q_id>[0-9]+)/$', views.evaluate_nq, name='evaluate_nq'),
 ]
 """
 accounts routing:

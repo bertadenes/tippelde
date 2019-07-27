@@ -9,9 +9,11 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 
 from tippelde.exceptions import CannotMultiply
-from tippelde.models import Game, Bet, Tournament, Score, StringQuestion, StringAnswer, NumericQuestion, NumericAnswer
+from tippelde.models import Game, Bet, Tournament, Score, StringQuestion, StringAnswer
+# from tippelde.models import NumericQuestion, NumericAnswer
 from tippelde.forms import Bet_form, Game_form, Game_update_form, Tournament_form, Evaluate, SQForm, SAForm, \
-    SQ_update_form, NQForm, NAForm
+    SQ_update_form
+# from tippelde.forms import NQForm, NAForm
 from tippelde.extras import player_group, is_manager, ev
 
 
@@ -35,8 +37,8 @@ def games(request):
     upcoming = Game.objects.order_by('kickoff').filter(kickoff__gte=now)
     results = Game.objects.order_by('-kickoff').exclude(kickoff__gte=now)
     sqs = StringQuestion.objects.order_by('due').filter(due__gte=now)
-    nqs = NumericQuestion.objects.order_by('due').filter(due__gte=now)
-    context = {'results': results, 'upcoming': upcoming, 'sqs': sqs, 'nqs': nqs}
+    # nqs = NumericQuestion.objects.order_by('due').filter(due__gte=now)
+    context = {'results': results, 'upcoming': upcoming, 'sqs': sqs}
     return render(request, 'games.html', context)
 
 
@@ -47,8 +49,8 @@ def guesses(request):
     upcoming = Bet.objects.filter(user=request.user).filter(game__kickoff__gte=now).order_by('game__kickoff')
     results = Bet.objects.filter(user=request.user).exclude(game__kickoff__gte=now).order_by('-game__kickoff')
     sas = StringAnswer.objects.filter(user=request.user).order_by('question__due')
-    nas = NumericAnswer.objects.filter(user=request.user).order_by('question__due')
-    context = {'results': results, 'upcoming': upcoming, 'sas': sas, 'nas': nas}
+    # nas = NumericAnswer.objects.filter(user=request.user).order_by('question__due')
+    context = {'results': results, 'upcoming': upcoming, 'sas': sas}
     return render(request, 'guesses.html', context)
 
 
@@ -131,28 +133,28 @@ def manage_sq(request):
     return render(request, 'management/questions.html', context)
 
 
-@login_required
-@user_passes_test(is_manager)
-def manage_nq(request):
-    qs = NumericQuestion.objects.order_by('due')
-    context = {'qs': qs}
-    if request.method == 'POST':
-        form = NQForm(request.POST)
-        if form.is_valid():
-            q = NumericQuestion.objects.create(name=form.cleaned_data['name'],
-                                               description=form.cleaned_data['description'],
-                                               due=form.cleaned_data['due'],
-                                               award=form.cleaned_data['award'],
-                                               changes=form.cleaned_data['changes'],
-                                               penalty=form.cleaned_data['penalty'],
-                                               tournament=form.cleaned_data['tournament'])
-            q.save()
-            return HttpResponseRedirect('/management/nq')
-    else:
-        form = NQForm()
-    context['form'] = form
-    context['type'] = "numeric"
-    return render(request, 'management/questions.html', context)
+# @login_required
+# @user_passes_test(is_manager)
+# def manage_nq(request):
+#     qs = NumericQuestion.objects.order_by('due')
+#     context = {'qs': qs}
+#     if request.method == 'POST':
+#         form = NQForm(request.POST)
+#         if form.is_valid():
+#             q = NumericQuestion.objects.create(name=form.cleaned_data['name'],
+#                                                description=form.cleaned_data['description'],
+#                                                due=form.cleaned_data['due'],
+#                                                award=form.cleaned_data['award'],
+#                                                changes=form.cleaned_data['changes'],
+#                                                penalty=form.cleaned_data['penalty'],
+#                                                tournament=form.cleaned_data['tournament'])
+#             q.save()
+#             return HttpResponseRedirect('/management/nq')
+#     else:
+#         form = NQForm()
+#     context['form'] = form
+#     context['type'] = "numeric"
+#     return render(request, 'management/questions.html', context)
 
 
 # Detail views
@@ -288,69 +290,69 @@ def sq(request, q_id):
     return render(request, 'question.html', context)
 
 
-@login_required
-def nq(request, q_id):
-    now = timezone.now()
-    q = NumericQuestion.objects.get(id=q_id)
-    context = {'q': q}
-    if player_group(request.user) and q.due > now:
-        if NumericAnswer.objects.filter(user=request.user, question=q).exists():
-            a = NumericAnswer.objects.filter(user=request.user, question=q).get()
-            if request.method == 'POST':
-                form = NAForm(request.POST)
-                context['form'] = form
-                if form.is_valid():
-                    if a.answer != form.cleaned_data['answer']:
-                        NumericAnswer.objects.filter(user=request.user,
-                                                     question=q).update(answer=form.cleaned_data['answer'],
-                                                                        changed=models.F('changed') + 1)
-                    return HttpResponseRedirect('/guesses/')
-            else:
-                context['changed'] = a.changed
-                if a.changed < q.changes:
-                    form = NAForm(instance=a)
-                    context['form'] = form
-        else:
-            if request.method == 'POST':
-                form = NAForm(request.POST)
-                if form.is_valid():
-                    a = NumericAnswer.objects.create_answer(request.user, q, form.cleaned_data['answer'])
-                    a.save()
-                    return HttpResponseRedirect('/guesses/')
-            else:
-                context['changed'] = -1
-                form = NAForm()
-            context['form'] = form
-    elif q.due < now:
-        ans = NumericAnswer.objects.filter(question=q)
-        context['ans'] = ans
-        context['past'] = True
-    if is_manager(request.user):
-        if q.due >= now:
-            if request.method == 'POST':
-                form = SQForm(request.POST)
-                if form.is_valid():
-                    NumericQuestion.objects.filter(id=q_id).update(name=form.cleaned_data['name'],
-                                                                   description=form.cleaned_data['description'],
-                                                                   due=form.cleaned_data['due'],
-                                                                   award=form.cleaned_data['award'],
-                                                                   changed=form.cleaned_data['changes'],
-                                                                   penalty=form.cleaned_data['penalty'],
-                                                                   tournament=form.cleaned_data['tournament'])
-                    return HttpResponseRedirect('/management/nq/')
-            else:
-                form = SQForm(instance=q)
-        else:
-            if request.method == 'POST':
-                form = SQ_update_form(request.POST)
-                if form.is_valid():
-                    NumericQuestion.objects.filter(id=q_id).update(correct_answer=form.cleaned_data['correct_answer'])
-                    return HttpResponseRedirect('/management/nq/')
-            else:
-                form = SQ_update_form(instance=q)
-        context['form'] = form
-    context['type'] = "numeric"
-    return render(request, 'question.html', context)
+# @login_required
+# def nq(request, q_id):
+#     now = timezone.now()
+#     q = NumericQuestion.objects.get(id=q_id)
+#     context = {'q': q}
+#     if player_group(request.user) and q.due > now:
+#         if NumericAnswer.objects.filter(user=request.user, question=q).exists():
+#             a = NumericAnswer.objects.filter(user=request.user, question=q).get()
+#             if request.method == 'POST':
+#                 form = NAForm(request.POST)
+#                 context['form'] = form
+#                 if form.is_valid():
+#                     if a.answer != form.cleaned_data['answer']:
+#                         NumericAnswer.objects.filter(user=request.user,
+#                                                      question=q).update(answer=form.cleaned_data['answer'],
+#                                                                         changed=models.F('changed') + 1)
+#                     return HttpResponseRedirect('/guesses/')
+#             else:
+#                 context['changed'] = a.changed
+#                 if a.changed < q.changes:
+#                     form = NAForm(instance=a)
+#                     context['form'] = form
+#         else:
+#             if request.method == 'POST':
+#                 form = NAForm(request.POST)
+#                 if form.is_valid():
+#                     a = NumericAnswer.objects.create_answer(request.user, q, form.cleaned_data['answer'])
+#                     a.save()
+#                     return HttpResponseRedirect('/guesses/')
+#             else:
+#                 context['changed'] = -1
+#                 form = NAForm()
+#             context['form'] = form
+#     elif q.due < now:
+#         ans = NumericAnswer.objects.filter(question=q)
+#         context['ans'] = ans
+#         context['past'] = True
+#     if is_manager(request.user):
+#         if q.due >= now:
+#             if request.method == 'POST':
+#                 form = SQForm(request.POST)
+#                 if form.is_valid():
+#                     NumericQuestion.objects.filter(id=q_id).update(name=form.cleaned_data['name'],
+#                                                                    description=form.cleaned_data['description'],
+#                                                                    due=form.cleaned_data['due'],
+#                                                                    award=form.cleaned_data['award'],
+#                                                                    changed=form.cleaned_data['changes'],
+#                                                                    penalty=form.cleaned_data['penalty'],
+#                                                                    tournament=form.cleaned_data['tournament'])
+#                     return HttpResponseRedirect('/management/nq/')
+#             else:
+#                 form = SQForm(instance=q)
+#         else:
+#             if request.method == 'POST':
+#                 form = SQ_update_form(request.POST)
+#                 if form.is_valid():
+#                     NumericQuestion.objects.filter(id=q_id).update(correct_answer=form.cleaned_data['correct_answer'])
+#                     return HttpResponseRedirect('/management/nq/')
+#             else:
+#                 form = SQ_update_form(instance=q)
+#         context['form'] = form
+#     context['type'] = "numeric"
+#     return render(request, 'question.html', context)
 
 
 # Deletion views
@@ -375,11 +377,11 @@ class SQDel(DeleteView):
 # class SADel(DeleteView):
 #     model = StringAnswer
 #     success_url = reverse_lazy('guesses')
-
-
-class NQDel(DeleteView):
-    model = NumericQuestion
-    success_url = reverse_lazy('manage_nq')
+#
+#
+# class NQDel(DeleteView):
+#     model = NumericQuestion
+#     success_url = reverse_lazy('manage_nq')
 
 
 # Evaluation views
@@ -415,17 +417,17 @@ def evaluate_sq(request, q_id):
         return render(request, 'evaluate_question.html', context)
 
 
-@login_required
-@user_passes_test(is_manager)
-def evaluate_nq(request, q_id):
-    q = NumericQuestion.objects.get(id=q_id)
-    if q.correct_answer is None or q.evaluated:
-        return HttpResponseRedirect('/management/nq/')
-    answers = NumericAnswer.objects.filter(question=q)
-    context = {'q': q, 'answers': answers}
-    if request.method == 'POST':
-        q.evaluate()
-        messages.info(request, "Answers for this question have been evaluated.")
-        return HttpResponseRedirect('/management/nq/')
-    else:
-        return render(request, 'evaluate_question.html', context)
+# @login_required
+# @user_passes_test(is_manager)
+# def evaluate_nq(request, q_id):
+#     q = NumericQuestion.objects.get(id=q_id)
+#     if q.correct_answer is None or q.evaluated:
+#         return HttpResponseRedirect('/management/nq/')
+#     answers = NumericAnswer.objects.filter(question=q)
+#     context = {'q': q, 'answers': answers}
+#     if request.method == 'POST':
+#         q.evaluate()
+#         messages.info(request, "Answers for this question have been evaluated.")
+#         return HttpResponseRedirect('/management/nq/')
+#     else:
+#         return render(request, 'evaluate_question.html', context)

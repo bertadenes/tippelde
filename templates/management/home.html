@@ -10,8 +10,8 @@
     {{ block.super }}
     <table>
         <th><a href="{% url 'manage_games' %}">Games</a></th>
-        <th><a href="{% url 'manage_sq' %}">Questions(text)</a></th>
-        <th><a href="{% url 'manage_nq' %}">Questions(numeric)</a></th>
+        <th><a href="{% url 'manage_sq' %}">Questions</a></th>
+{#        <th><a href="{% url 'manage_nq' %}">Questions(numeric)</a></th>#}
     </table>
 {% endblock menu %}
 {% block content %}
