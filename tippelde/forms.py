@@ -71,6 +71,20 @@ class SurvivorRoundForm(forms.ModelForm):
 
 
 class SurvivorGuessForm(forms.ModelForm):
+    """
+    Budapest Honvéd FC
+    Debreceni VSC
+    Diósgyőri VTK
+    Ferencvárosi TC
+    Kaposvári Rákóczi FC
+    Kisvárda Master Good
+    Mezőkövesd Zsóry FC
+    MOL Fehérvár FC
+    Paksi FC
+    Puskás Akadémia FC
+    Újpest FC
+    Zalaegerszegi TE
+    """
     class Meta:
         model = SurvivorGuess
         fields = ('answer', )
