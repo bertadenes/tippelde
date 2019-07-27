@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^games/', views.games, name='games'),
     url(r'^guesses/', views.guesses, name='guesses'),
+    url(r'^survivor/', views.survivor, name='survivor'),
     url(r'^tables/', views.tables, name='tables'),
     # management routes
     url(r'^management/home/', views.manage, name='management'),

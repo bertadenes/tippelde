@@ -51,6 +51,12 @@ def guesses(request):
 
 
 @login_required
+@user_passes_test(player_group)
+def survivor(request):
+    return
+
+
+@login_required
 def tables(request):
     context = {}
     if request.method == "POST":
