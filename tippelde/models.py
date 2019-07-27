@@ -49,7 +49,6 @@ class Game_Manager(models.Manager):
 
 class Bookmaker(models.Manager):
     def create_Bet(self, user, game, home_guess, away_guess, mult4):
-        bet = self.create(user=user, game=game, home_guess=home_guess, away_guess=away_guess, mult4=mult4)
         if not Score.objects.filter(user=user, tournament=game.tournament).exists():
             score = Score.objects.create(user=user, tournament=game.tournament)
             score.save()
@@ -59,6 +58,7 @@ class Bookmaker(models.Manager):
             raise CannotMultiply("You have no tokens left.")
         elif mult4:
             Score.objects.filter(user=user, tournament=game.tournament).update(mult4left=models.F('mult4left')-1)
+        bet = self.create(user=user, game=game, home_guess=home_guess, away_guess=away_guess, mult4=mult4)
         return bet
 
 

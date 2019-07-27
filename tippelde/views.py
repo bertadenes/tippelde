@@ -7,6 +7,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+
+from tippelde.exceptions import CannotMultiply
 from tippelde.models import Game, Bet, Tournament, Score, StringQuestion, StringAnswer, NumericQuestion, NumericAnswer
 from tippelde.forms import Bet_form, Game_form, Game_update_form, Tournament_form, Evaluate, SQForm, SAForm, \
     SQ_update_form, NQForm, NAForm
@@ -175,11 +177,14 @@ def details(request, game_id):
             if request.method == 'POST':
                 form = Bet_form(request.POST)
                 if form.is_valid():
-                    bet = Bet.objects.create_Bet(game=game, user=request.user,
-                                                 home_guess=form.cleaned_data['home_guess'],
-                                                 away_guess=form.cleaned_data['away_guess'],
-                                                 mult4=form.cleaned_data['mult4'])
-                    bet.save()
+                    try:
+                        bet = Bet.objects.create_Bet(game=game, user=request.user,
+                                                     home_guess=form.cleaned_data['home_guess'],
+                                                     away_guess=form.cleaned_data['away_guess'],
+                                                     mult4=form.cleaned_data['mult4'])
+                        bet.save()
+                    except CannotMultiply:
+                        return HttpResponseRedirect('/games/')
                     return HttpResponseRedirect('/guesses/')
             else:
                 form = Bet_form()
