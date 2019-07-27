@@ -40,7 +40,7 @@
             {{ form }}
             <input type="submit" value="Submit">
         </form>
-    {% elif form %}
+    {% elif form and game.evaluated == "False"%}
         {% if request.user.username == "guber" or request.user.username == "berta"%}
             <form action="" method="post">
                 {% csrf_token %}
