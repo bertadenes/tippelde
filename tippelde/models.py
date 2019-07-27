@@ -30,6 +30,7 @@ class Tournament(models.Model):
 class Score(models.Model):
     score = models.SmallIntegerField(default=0)
     mult4left = models.SmallIntegerField(default=3)
+    double_team = models.CharField(max_length=200, blank=True, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     # objects = Score_Manager
@@ -123,6 +124,9 @@ class Game(Question):
             award = ev(self.home_goals, self.away_goals, bet.home_guess, bet.away_guess) * self.multiplier
             if bet.mult4:
                 award = award * 4
+            score = Score.objects.get(user=bet.user, tournament=self.tournament)
+            if score.double_team in [self.home_team, self.away_team]:
+                award = award * 2
             Score.objects.filter(user=bet.user, tournament=self.tournament).update(score=models.F('score')+award)
         Game.objects.filter(id=self.id).update(evaluated=True)
         return
