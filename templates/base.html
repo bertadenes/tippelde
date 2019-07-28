@@ -20,6 +20,7 @@
                 {% if request.user|has_group:"managers" %}
                     <th><a href="{% url 'management' %}">Management</a></th>
                 {% endif %}
+                <th><a href="{% url 'password_change' %}">change password</a></th>
                 <th><a href="{% url 'logout' %}">logout</a></th>
             {% else %}
                 <th>Please login to see details.</th>
