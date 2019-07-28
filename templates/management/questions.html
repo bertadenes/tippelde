@@ -18,14 +18,14 @@
             <tr>
                 {% if type == "string" %}
                     <td><a href="{% url 'sq' q.id %}">{{ q.name }}</a></td>
-                {% elif type == "numeric" %}
-                    <td><a href="{% url 'nq' q.id %}">{{ q.name }}</a></td>
+                {% elif type == "survivor" %}
+                    <td><a href="{% url 'round' q.id %}">{{ q.name }}</a></td>
                 {% endif %}
                 <td>{{ q.due }}</td>
                 {% if type == "string" %}
                     <td><a href="{% url 'delete_sq' q.id %}">delete</a></td>
-                {% elif type == "numeric" %}
-                    <td><a href="{% url 'delete_nq' q.id %}">delete</a></td>
+                {% elif type == "survivor" %}
+                    <td>N/A</td>
                 {% endif %}
             </tr>
         {% endfor %}

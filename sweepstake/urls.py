@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^management/home/', views.manage, name='management'),
     url(r'^management/games/', views.manage_games, name='manage_games'),
     url(r'^management/sq/', views.manage_sq, name='manage_sq'),
+    url(r'^management/survivor/', views.manage_survivor, name='manage_survivor'),
     # url(r'^management/nq/', views.manage_nq, name='manage_nq'),
     # detailed views
     url(r'^details/(?P<game_id>[0-9]+)/$', views.details, name='details'),

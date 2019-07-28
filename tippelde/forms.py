@@ -91,11 +91,11 @@ class SAForm(forms.ModelForm):
 class SurvivorRoundForm(forms.ModelForm):
     class Meta:
         model = SurvivorRound
-        fields = ('matchday', )
+        fields = ('matchday', 'due', 'tournament', 'name', 'description')
 
 
 class SurvivorGuessForm(forms.ModelForm):
-    """
+    """ teams of 2019-20:
     Budapest Honvéd FC
     Debreceni VSC
     Diósgyőri VTK
