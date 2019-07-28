@@ -505,17 +505,17 @@ def evaluate_sq(request, q_id):
         return render(request, 'evaluate_question.html', context)
 
 
-# @login_required
-# @user_passes_test(is_manager)
-# def evaluate_nq(request, q_id):
-#     q = NumericQuestion.objects.get(id=q_id)
-#     if q.correct_answer is None or q.evaluated:
-#         return HttpResponseRedirect('/management/nq/')
-#     answers = NumericAnswer.objects.filter(question=q)
-#     context = {'q': q, 'answers': answers}
-#     if request.method == 'POST':
-#         q.evaluate()
-#         messages.info(request, "Answers for this question have been evaluated.")
-#         return HttpResponseRedirect('/management/nq/')
-#     else:
-#         return render(request, 'evaluate_question.html', context)
+@login_required
+@user_passes_test(is_manager)
+def evaluate_round(request, q_id):
+    q = SurvivorRound.objects.get(id=q_id)
+    if q.correct_answer is None or q.evaluated:
+        return HttpResponseRedirect('/management/survivor/')
+    answers = SurvivorGuess.objects.filter(question=q)
+    context = {'q': q, 'answers': answers}
+    if request.method == 'POST':
+        q.evaluate()
+        messages.info(request, "Answers for this question have been evaluated.")
+        return HttpResponseRedirect('/management/survivor/')
+    else:
+        return render(request, 'evaluate_question.html', context)

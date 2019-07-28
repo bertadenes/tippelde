@@ -28,18 +28,21 @@
         <p>No game available.</p>
     {% endif %}
     {% if past %}
-    {% endif %}
-    {% if form %}
-        {% if request.user|has_group:"Players"%}
-            <p>Which team is going to win this matchday?</p>
-        {% elif request.user|has_group:"managers"%}
-            <p>Registers teams that have won, separated by comma.</p>
+        {% if form %}
+            {% if request.user|has_group:"Players"%}
+                <p>Which team is going to win this matchday?</p>
+            {% elif request.user|has_group:"managers"%}
+                {% if SR.correct_answer is not None %}
+                    <a href="{% url 'evaluate_round' SR.id %}">evaluate</a>
+                {% endif %}
+                <p>Registers teams that have won, separated by comma.</p>
+            {% endif %}
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ form }}
+                <input type="submit" value="Submit">
+            </form>
         {% endif %}
-        <form action="" method="post">
-            {% csrf_token %}
-            {{ form }}
-            <input type="submit" value="Submit">
-        </form>
     {% endif %}
 {% endblock %}
 </body>
