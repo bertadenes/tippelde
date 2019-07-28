@@ -31,23 +31,25 @@
         {% else %}
             <p>No guesses on this game.</p>
         {% endif %}
-    {% endif %}
-    {% if form and request.user|has_group:"Players"%}
-        <p>Guess the outcome:</p>
-        <p>You have {{ mult4left }} 4x tokens left. <b>Can only be used in a new guess and cannot be withdrawn</b></p>
-        <form action="" method="post">
-            {% csrf_token %}
-            {{ form }}
-            <input type="submit" value="Submit">
-        </form>
-    {% elif form and game.evaluated == "False"%}
-        {% if request.user|has_group:"managers" %}
+        {% if form and game.evaluated == False %}
+            {% if request.user|has_group:"managers" %}
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input type="submit" name="add_result" value="Register result">
+                </form>
+                <a href="{% url 'evaluate' game.id %}">evaluate</a>
+            {% endif %}
+        {% endif %}
+    {% else %}
+        {% if form and request.user|has_group:"Players"%}
+            <p>Guess the outcome:</p>
+            <p>You have {{ mult4left }} 4x tokens left. <b>Can only be used in a new guess and cannot be withdrawn</b></p>
             <form action="" method="post">
                 {% csrf_token %}
                 {{ form }}
-                <input type="submit" name="add_result" value="Register result">
+                <input type="submit" value="Submit">
             </form>
-            <a href="{% url 'evaluate' game.id %}">evaluate</a>
         {% endif %}
     {% endif %}
 {% endblock %}
