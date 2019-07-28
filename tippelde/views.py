@@ -85,8 +85,10 @@ def tables(request):
     if request.method == "POST":
         form = Tournament_form(request.POST)
         if form.is_valid():
-            tour = Tournament.objects.filter(name=form.cleaned_data['name']).get()
-            scores = Score.objects.filter(tournament=tour).order_by('-score')
+            scores = []
+            for t in form.cleaned_data['tables']:
+                tour = Tournament.objects.filter(name=t).get()
+                scores.append(Score.objects.filter(tournament=tour).order_by('-score'))
             context['scores'] = scores
             form = Tournament_form()
     else:

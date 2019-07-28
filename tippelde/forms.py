@@ -66,7 +66,8 @@ class Game_update_form(forms.ModelForm):
 
 
 class Tournament_form(forms.Form):
-    name = forms.ChoiceField(choices=[(t.name, t.name) for t in Tournament.objects.all()])
+    # name = forms.ChoiceField(choices=[(t.name, t.name) for t in Tournament.objects.all()])
+    tables = forms.MultipleChoiceField(choices=[(t.name, t.name) for t in Tournament.objects.all()])
 
 
 class Evaluate(forms.Form):
