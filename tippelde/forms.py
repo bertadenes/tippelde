@@ -11,6 +11,7 @@ class Bet_form(forms.ModelForm):
     class Meta:
         model = Bet
         fields = ('home_guess', 'away_guess', 'mult4', )
+        labels = {'mult4': '4x bonus'}
 
 
 class Game_form(forms.ModelForm):
