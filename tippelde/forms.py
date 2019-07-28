@@ -2,9 +2,14 @@ import datetime
 from django.utils import timezone
 from django import forms
 from django.core.exceptions import ValidationError
-from tippelde.models import Bet, Game, Tournament, StringQuestion, StringAnswer, SurvivorRound, SurvivorGuess
-# from tippelde.models import NumericQuestion, NumericAnswer
+from tippelde.models import Bet, Game, Tournament, StringQuestion, StringAnswer, SurvivorRound, SurvivorGuess, Post
 from tippelde.widgets import ListTextWidget
+
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ('title', 'content', )
 
 
 class Bet_form(forms.ModelForm):

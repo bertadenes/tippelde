@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^games/', views.games, name='games'),
     url(r'^guesses/', views.guesses, name='guesses'),
     url(r'^survivor/', views.survivor, name='survivor'),
-    url(r'^cup/', views.cup, name='cup'),
+    # url(r'^cup/', views.cup, name='cup'),
     url(r'^tables/', views.tables, name='tables'),
     url(r'^call/', views.call, name='call'),
     # management routes

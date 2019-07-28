@@ -9,26 +9,30 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 
 from tippelde.exceptions import CannotMultiply
-from tippelde.models import Game, Bet, Tournament, Score, StringQuestion, StringAnswer, SurvivorRound, SurvivorGuess
-# from tippelde.models import NumericQuestion, NumericAnswer
-from tippelde.forms import Bet_form, Game_form, Game_update_form, Tournament_form, Evaluate, SQForm, SAForm, \
+from tippelde.models import Game, Bet, Tournament, Score, StringQuestion, StringAnswer, SurvivorRound, SurvivorGuess, \
+    Post
+from tippelde.forms import Bet_form, Game_form, Game_update_form, Tournament_form, PostForm, SQForm, SAForm, \
     SQ_update_form, SurvivorGuessForm, SurvivorRoundForm, SurvivorRoundUpdateForm
-# from tippelde.forms import NQForm, NAForm
 from tippelde.extras import player_group, is_manager, ev
 
 
 # Create your views here.
 # General views
 def index(request):
+    now = timezone.now()
     context = {}
     if request.method == "POST":
-        form = Evaluate(request.POST)
+        form = PostForm(request.POST)
         if form.is_valid():
-            context['score'] = ev(form.cleaned_data['home_goals'], form.cleaned_data['away_goals'],
-                                  form.cleaned_data['home_guess'], form.cleaned_data['away_guess'])
+            p = Post.objects.create(title=form.cleaned_data['title'], content=form.cleaned_data['content'],
+                                    user=request.user, added=now)
+            p.save()
+            return HttpResponseRedirect('/')
     else:
-        form = Evaluate()
+        form = PostForm()
+        posts = Post.objects.order_by('-added')
     context['form'] = form
+    context['posts'] = posts
     return render(request, 'index.html', context)
 
 

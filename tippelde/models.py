@@ -17,6 +17,11 @@ from tippelde.extras import ev
 #     def create_Score(self, user, tour):
 #         score = self.create(user=user, tournament=tour)
 #         return score
+class Post(models.Model):
+    title = models.CharField(max_length=200)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    content = models.TextField(max_length=10000)
+    added = models.DateTimeField()
 
 
 class Tournament(models.Model):
