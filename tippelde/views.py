@@ -70,6 +70,12 @@ def survivor(request):
 
 
 @login_required
+def cup(reqest):
+
+    return
+
+
+@login_required
 def tables(request):
     context = {}
     if request.method == "POST":
@@ -83,6 +89,11 @@ def tables(request):
         form = Tournament_form()
     context['form'] = form
     return render(request, 'table.html', context)
+
+
+@login_required
+def call(reqest):
+    return render(reqest, 'call.html')
 
 
 # Management views
