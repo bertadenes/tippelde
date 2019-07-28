@@ -211,6 +211,20 @@ class SurvivorRound(Question):
     matchday = models.PositiveSmallIntegerField(unique=True)
     correct_answer = models.CharField(blank=True, null=True, max_length=200)
 
+    def evaluate(self):
+        if self.tournament is None:
+            SurvivorRound.objects.filter(id=self.id).update(evaluated=True)
+            return
+        if self.evaluated:
+            raise EvaluatedException("This question has already been evaluated.")
+        answers = SurvivorGuess.objects.filter(question=self)
+        for a in answers:
+            if a.answer == self.correct_answer:
+                award = self.award - (a.changed * self.penalty)
+                Score.objects.filter(user=a.user, tournament=self.tournament).update(score=models.F('score') + award)
+        SurvivorRound.objects.filter(id=self.id).update(evaluated=True)
+        return
+
 
 class SurvivorGuess(Answer):
     question = models.ForeignKey(SurvivorRound, on_delete=models.CASCADE)
