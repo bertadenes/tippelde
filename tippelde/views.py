@@ -228,8 +228,8 @@ def details(request, game_id):
                                                      away_guess=form.cleaned_data['away_guess'],
                                                      mult4=form.cleaned_data['mult4'])
                         bet.save()
-                    except CannotMultiply:
-                        messages.info(request, "Your guess is not saved, because you are out of tokens.")
+                    except CannotMultiply as cme:
+                        messages.info(request, str(cme))
                         return HttpResponseRedirect('/games/')
                     return HttpResponseRedirect('/guesses/')
             else:
