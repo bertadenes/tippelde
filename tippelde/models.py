@@ -219,9 +219,18 @@ class SurvivorRound(Question):
             raise EvaluatedException("This question has already been evaluated.")
         answers = SurvivorGuess.objects.filter(question=self)
         for a in answers:
-            if a.answer == self.correct_answer:
-                award = self.award - (a.changed * self.penalty)
+            teams = self.correct_answer.split(',')
+            if a.answer in teams:
+                if Score.objects.filter(user=a.user, tournament=self.tournament).survivor_fails < 6:
+                    award = 20
+                else:
+                    award = 10
                 Score.objects.filter(user=a.user, tournament=self.tournament).update(score=models.F('score') + award)
+            else:
+                Score.objects.filter(user=a.user, tournament=self.tournament).\
+                    update(survivor_fails=models.F('survivor_fails') + 1)
+                if Score.objects.filter(user=a.user, tournament=self.tournament).survivor_fails == 6:
+                    Score.objects.filter(user=a.user, tournament=self.tournament).update(survivor_died=self.matchday)
         SurvivorRound.objects.filter(id=self.id).update(evaluated=True)
         return
 
