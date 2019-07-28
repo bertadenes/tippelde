@@ -309,7 +309,7 @@ def sq(request, q_id):
                                                                   description=form.cleaned_data['description'],
                                                                   due=form.cleaned_data['due'],
                                                                   award=form.cleaned_data['award'],
-                                                                  changed=form.cleaned_data['changes'],
+                                                                  changes=form.cleaned_data['changes'],
                                                                   penalty=form.cleaned_data['penalty'],
                                                                   tournament=form.cleaned_data['tournament'])
                     return HttpResponseRedirect('/management/sq/')
