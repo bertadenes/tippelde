@@ -12,7 +12,7 @@ from tippelde.exceptions import CannotMultiply
 from tippelde.models import Game, Bet, Tournament, Score, StringQuestion, StringAnswer, SurvivorRound, SurvivorGuess
 # from tippelde.models import NumericQuestion, NumericAnswer
 from tippelde.forms import Bet_form, Game_form, Game_update_form, Tournament_form, Evaluate, SQForm, SAForm, \
-    SQ_update_form, SurvivorGuessForm, SurvivorRoundForm
+    SQ_update_form, SurvivorGuessForm, SurvivorRoundForm, SurvivorRoundUpdateForm
 # from tippelde.forms import NQForm, NAForm
 from tippelde.extras import player_group, is_manager, ev
 
@@ -364,6 +364,17 @@ def survivor_round(request, round_id):
         ans = SurvivorGuess.objects.filter(question=q)
         context['ans'] = ans
         context['past'] = True
+    if is_manager(request.user):
+        if q.due < now:
+            if request.method == 'POST':
+                form = SurvivorRoundUpdateForm(request.POST)
+                if form.is_valid():
+                    SurvivorRound.objects.filter(id=round_id).\
+                        update(correct_answer=form.cleaned_data['correct_answer'])
+                    return HttpResponseRedirect('/management/survivor/')
+            else:
+                form = SurvivorRoundUpdateForm(instance=q)
+                context['form'] = form
     return render(request, 'round.html', context)
 
 

@@ -94,6 +94,12 @@ class SurvivorRoundForm(forms.ModelForm):
         fields = ('matchday', 'due', 'tournament', 'name', 'description')
 
 
+class SurvivorRoundUpdateForm(forms.ModelForm):
+    class Meta:
+        model = SurvivorRound
+        fields = ('correct_answer', )
+
+
 class SurvivorGuessForm(forms.ModelForm):
     """ teams of 2019-20:
     Budapest Honvéd FC

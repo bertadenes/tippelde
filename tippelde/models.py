@@ -209,6 +209,7 @@ class StringAnswer(Answer):
 
 class SurvivorRound(Question):
     matchday = models.PositiveSmallIntegerField(unique=True)
+    correct_answer = models.CharField(blank=True, null=True, max_length=200)
 
 
 class SurvivorGuess(Answer):

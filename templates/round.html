@@ -29,8 +29,12 @@
     {% endif %}
     {% if past %}
     {% endif %}
-    {% if form and request.user|has_group:"Players"%}
-        <p>Which team is going to win this matchday?</p>
+    {% if form %}
+        {% if request.user|has_group:"Players"%}
+            <p>Which team is going to win this matchday?</p>
+        {% elif request.user|has_group:"managers"%}
+            <p>Registers teams that have won, separated by comma.</p>
+        {% endif %}
         <form action="" method="post">
             {% csrf_token %}
             {{ form }}
