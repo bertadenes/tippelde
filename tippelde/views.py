@@ -74,9 +74,8 @@ def survivor(request):
 
 
 @login_required
-def cup(reqest):
-
-    return
+def cup(request):
+    return HttpResponseRedirect('/')
 
 
 @login_required
@@ -85,11 +84,23 @@ def tables(request):
     if request.method == "POST":
         form = Tournament_form(request.POST)
         if form.is_valid():
-            scores = []
+            scores = {'total': {}}
+            i = 1
+            col = {'total': i}
             for t in form.cleaned_data['tables']:
                 tour = Tournament.objects.filter(name=t).get()
-                scores.append(Score.objects.filter(tournament=tour).order_by('-score'))
+                scores[t] = {}
+                i += 1
+                col[t] = i
+                for s in Score.objects.filter(tournament=tour).order_by('-score'):
+                    scores[t][s.user.username] = s.score
+                    if s.user.username in scores['total']:
+                        scores['total'][s.user.username] += s.score
+                    else:
+                        scores['total'][s.user.username] = s.score
+
             context['scores'] = scores
+            context['col'] = col
             form = Tournament_form()
     else:
         form = Tournament_form()
@@ -98,8 +109,8 @@ def tables(request):
 
 
 @login_required
-def call(reqest):
-    return render(reqest, 'call.html')
+def call(request):
+    return render(request, 'call.html')
 
 
 # Management views
