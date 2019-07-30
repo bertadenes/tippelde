@@ -22,6 +22,7 @@ urlpatterns = [
     # system routes
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
+    url(r'^tinymce/', include('tinymce.urls')),
     # general routes
     url(r'^$', views.index, name='index'),
     url(r'^games/', views.games, name='games'),

@@ -2,6 +2,7 @@ import datetime
 from django.utils import timezone
 from django import forms
 from django.core.exceptions import ValidationError
+from tinymce.widgets import TinyMCE
 from tippelde.models import Bet, Game, Tournament, StringQuestion, StringAnswer, SurvivorRound, SurvivorGuess, Post
 from tippelde.widgets import ListTextWidget
 
@@ -10,6 +11,10 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ('title', 'content', )
+        widgets = {'content': TinyMCE(attrs={'cols': 80, 'rows': 20})}
+
+    class Media:
+        js = ('/site_media/static/tiny_mce/tinymce.min.js',)
 
 
 class Bet_form(forms.ModelForm):

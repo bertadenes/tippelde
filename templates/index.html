@@ -6,8 +6,10 @@
 </head>
 <body>
 {% extends 'base.html' %}
+{% load static %}
 {% load custom_tags %}
 {% block content %}
+    {{ form.media }}
     {% if request.user|has_group:"managers" %}
             <form action="" method="post">
                 {% csrf_token %}
@@ -19,7 +21,7 @@
         {% for p in posts %}
             <h3>{{ p.title }}</h3>
             <p><i>posted {{ p.added }}</i></p>
-            <div><p>{{ p.content }}</p></div>
+            <div>{{ p.content | safe }}</div>
         {% endfor %}
     {% endif %}
 {% endblock %}

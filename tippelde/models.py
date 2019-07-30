@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from tinymce.models import HTMLField
 from tippelde.exceptions import EvaluatedException, CannotMultiply
 from tippelde.extras import ev
 
@@ -20,7 +21,7 @@ from tippelde.extras import ev
 class Post(models.Model):
     title = models.CharField(max_length=200)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    content = models.TextField(max_length=10000)
+    content = models.CharField(max_length=10000)
     added = models.DateTimeField()
 
 
