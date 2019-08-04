@@ -42,7 +42,11 @@ def games(request):
     results = Game.objects.order_by('-kickoff').exclude(kickoff__gte=now)
     sqs = StringQuestion.objects.order_by('due').filter(due__gte=now)
     # nqs = NumericQuestion.objects.order_by('due').filter(due__gte=now)
-    context = {'results': results, 'upcoming': upcoming, 'sqs': sqs}
+    open_rounds = SurvivorRound.objects.filter(due__gte=now).order_by('-matchday')
+    past_rounds = SurvivorGuess.objects.filter(user=request.user,
+                                               question__due__lt=now).order_by('-question__matchday')
+    context = {'results': results, 'upcoming': upcoming, 'sqs': sqs, 'open_rounds': open_rounds,
+               'past_rounds': past_rounds}
     return render(request, 'games.html', context)
 
 
