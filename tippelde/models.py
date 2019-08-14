@@ -110,12 +110,7 @@ class Game(Question):
 
     def get_result(self):
         if self.home_goals is not None and self.away_goals is not None:
-            if self.home_goals == self.away_goals:
-                return "Draw"
-            elif self.home_goals > self.away_goals:
-                return "Home"
-            elif self.home_goals < self.away_goals:
-                return "Away"
+            return "{0:d}-{1:d}".format(self.home_goals, self.away_goals)
         else:
             return "Not registered"
         # obsolete with storing the actual score
@@ -183,12 +178,7 @@ class Bet(Answer):
                                                    self.away_guess, self.user.__str__())
 
     def get_outcome(self):
-        if self.home_guess == self.away_guess:
-            return "Draw"
-        elif self.home_guess > self.away_guess:
-            return "Home"
-        elif self.home_guess < self.away_guess:
-            return "Away"
+        return "{0:d}-{1:d}".format(self.home_guess, self.away_guess)
 
 
 class StringQuestion(Question):
