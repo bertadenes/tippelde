@@ -231,7 +231,7 @@ class SurvivorRound(Question):
         for a in answers:
             teams = self.correct_answer.split(',')
             if a.answer in teams:
-                if Score.objects.filter(user=a.user, tournament=self.tournament).survivor_fails < 6:
+                if Score.objects.filter(user=a.user, tournament=self.tournament).values('survivor_fails') < 6:
                     award = 20
                 else:
                     award = 10
@@ -239,7 +239,7 @@ class SurvivorRound(Question):
             else:
                 Score.objects.filter(user=a.user, tournament=self.tournament).\
                     update(survivor_fails=models.F('survivor_fails') + 1)
-                if Score.objects.filter(user=a.user, tournament=self.tournament).survivor_fails == 6:
+                if Score.objects.filter(user=a.user, tournament=self.tournament)..values('survivor_fails') == 6:
                     Score.objects.filter(user=a.user, tournament=self.tournament).update(survivor_died=self.matchday)
         SurvivorRound.objects.filter(id=self.id).update(evaluated=True)
         return
