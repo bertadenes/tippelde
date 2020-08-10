@@ -32,10 +32,10 @@ class Game_form(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         teams = (
                 'Budapest Honvéd FC',
-                'Debreceni VSC',
+                'MTK Budapest FC',
                 'Diósgyőri VTK',
                 'Ferencvárosi TC',
-                'Kaposvári Rákóczi FC',
+                'Budafoki MTE',
                 'Kisvárda Master Good',
                 'Mezőkövesd Zsóry FC',
                 'MOL Fehérvár FC',
@@ -114,12 +114,12 @@ class SurvivorRoundUpdateForm(forms.ModelForm):
 
 
 class SurvivorGuessForm(forms.ModelForm):
-    """ teams of 2019-20:
+    """ teams of 2020-21:
     Budapest Honvéd FC
-    Debreceni VSC
+    MTK Budapest FC
     Diósgyőri VTK
     Ferencvárosi TC
-    Kaposvári Rákóczi FC
+    Budafoki MTE
     Kisvárda Master Good
     Mezőkövesd Zsóry FC
     MOL Fehérvár FC
@@ -134,10 +134,10 @@ class SurvivorGuessForm(forms.ModelForm):
         TEAMS = (
             ('', 'Select'),
             ('Budapest Honvéd FC', 'Budapest Honvéd FC'),
-            ('Debreceni VSC', 'Debreceni VSC'),
+            ('MTK Budapest FC', 'MTK Budapest FC'),
             ('Diósgyőri VTK', 'Diósgyőri VTK'),
             ('Ferencvárosi TC', 'Ferencvárosi TC'),
-            ('Kaposvári Rákóczi FC', 'Kaposvári Rákóczi FC'),
+            ('Budafoki MTE', 'Budafoki MTE'),
             ('Kisvárda Master Good', 'Kisvárda Master Good'),
             ('Mezőkövesd Zsóry FC', 'Mezőkövesd Zsóry FC'),
             ('MOL Fehérvár FC', 'MOL Fehérvár FC'),
